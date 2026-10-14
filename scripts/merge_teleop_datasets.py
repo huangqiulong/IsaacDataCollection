@@ -15,9 +15,9 @@
 
 示例:
     python ~/code/isaac/IsaacDataCollection/scripts/merge_teleop_datasets.py \
-        ./datasets/dataset_gamepad_all.hdf5 \
-        ./datasets/dataset_gamepad.hdf5 \
-        ./datasets/dataset_gamepad_b2.hdf5
+        ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad_all.hdf5 \
+        ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5 \
+        ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad_b2.hdf5
 
 输出:
   - 打印每个输入文件的演示数 / 采用数、输出总览（条数 / 帧数 / success 数）；

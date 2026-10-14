@@ -11,8 +11,8 @@
 
 用法:
     source ~/code/isaac/isaaclab/.venv/bin/activate
-    python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5
-    python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5 \
+    python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
+    python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 \
         --demo demo_1 --out /tmp/demo_1.png
 
 依赖: h5py + numpy + matplotlib(isaaclab venv 均已内置)。

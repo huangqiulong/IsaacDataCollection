@@ -36,7 +36,7 @@ export UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple      # 国内镜像
 
 ```bash
 cd ~/code/isaac/isaaclab && source .venv/bin/activate
-mkdir -p datasets        # 所有演示数据集默认落在 ./datasets/
+mkdir -p ~/code/isaac/IsaacDataCollection/datasets        # 所有演示数据集默认落在 ~/code/isaac/IsaacDataCollection/datasets/
 ```
 
 - 子命令形式：`./isaaclab.sh teleop run/record/replay ...`（需先激活 venv）
@@ -118,7 +118,7 @@ Isaac Lab 提供**两代遥操作栈**，均为"人在环"实时控制 + 自动�
 > （`IsaacDataCollection/scripts/isaaclab_teleop_launch.py` + `isaaclab_teleop_extras.py`，不修改上游仓库）。
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ① 热身：实时遥操，熟悉手感（不录制）
 ./isaaclab.sh teleop run \
@@ -126,11 +126,11 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --visualizer kit --num_envs 1 \
   --sensitivity 4 --teleop_device keyboard
 
-# ② 录制 10 条演示 → ./datasets/dataset.hdf5
+# ② 录制 10 条演示 → ~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5
 ./isaaclab.sh teleop record \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit \
-  --dataset_file ./datasets/dataset.hdf5 \
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5 \
   --num_demos 10 \
   --teleop_device keyboard
 
@@ -139,12 +139,12 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit --num_envs 1 \
   --reset_sim_buffer_each_episode \
-  --dataset_file ./datasets/dataset.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5
 
 # ④ 查看数据文件结构（推荐先做，了解 schema）
 python - <<'PY'
 import h5py
-f = h5py.File("./datasets/dataset.hdf5", "r")
+f = h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset.hdf5", "r")
 print("top:", list(f.keys()))
 d = f["data"]; print("demos:", list(d.keys()))
 demo = d["demo_0"]; print("demo keys:", list(demo.keys()))
@@ -259,7 +259,7 @@ UMI 的本质是"**腕部相机 + 末端相对动作**"的数据，仿真里以 
 ### 4.4 本地学习操作方案（推荐：录 3 条腕部视角演示并导出视频）
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ① 录制 3 条（相机默认渲染；不要加 --disable_external_cameras，否则相机被剥离）
 ./isaaclab.sh teleop record \
@@ -267,15 +267,15 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 3 \
-  --dataset_file ./datasets/dataset_umi_like.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5
 
 # ② 把腕部相机画面导出成 MP4（默认键位列表已含 wrist_cam）
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
-  --input_file ./datasets/dataset_umi_like.hdf5 \
-  --output_dir ./datasets/umi_videos \
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5 \
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/umi_videos \
   --input_keys wrist_cam
 
-# ③ 观看 ./datasets/umi_videos/ 下的视频，对照"这就是 UMI 的同轴视角数据"
+# ③ 观看 ~/code/isaac/IsaacDataCollection/datasets/umi_videos/ 下的视频，对照"这就是 UMI 的同轴视角数据"
 ```
 
 ### 4.5 与真机的差异 / 注意
@@ -317,7 +317,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
 > 全程小规模参数已调好（适配 8GB 显存）。
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ① 下载官方预标注数据集（仅 ~5MB；S3 直连较慢，几分钟）
 wget -c -P ./datasets \
@@ -326,27 +326,27 @@ wget -c -P ./datasets \
 # ② 小规模生成操作数据集（20 条；8GB 显存用小并发）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --device cpu --num_envs 8 --generation_num_trials 20 \
-  --input_file ./datasets/dataset_annotated_g1_locomanip.hdf5 \
-  --output_file ./datasets/generated_dataset_g1_locomanip.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5
 
 # ③ 生成"移动+操作"数据（含 robot_pov_cam 第一人称帧；--sensor_camera_view 把视口切到机器人 POV）
 ./isaaclab.sh -p scripts/imitation_learning/locomanipulation_sdg/generate_data.py \
   --device cpu \
   --kit_args="--enable isaacsim.replicator.experimental.mobility_gen" \
   --task="Isaac-G1-SteeringWheel-Locomanipulation" \
-  --dataset ./datasets/generated_dataset_g1_locomanip.hdf5 \
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5 \
   --num_runs 1 --lift_step 60 --navigate_step 130 \
-  --output_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
   --sensor_camera_view --visualizer kit
 #   想高分辨率（320x512）在命令里再加 --high_res_video
 
 # ④ 导出第一人称视频
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
-  --input_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
-  --output_dir ./datasets/ego_videos \
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_videos \
   --input_keys robot_pov_cam --video_width 512 --video_height 320
 
-# ⑤ 观看 ./datasets/ego_videos/robot_pov_cam_demo_0.mp4 —— 这就是"机器人版 ego 数据"
+# ⑤ 观看 ~/code/isaac/IsaacDataCollection/datasets/ego_videos/robot_pov_cam_demo_0.mp4 —— 这就是"机器人版 ego 数据"
 ```
 
 ### 5.5 与真机的差异 / 注意
@@ -379,7 +379,7 @@ wget -c -P ./datasets \
 
 ```
 （可选）遥操作录少量演示 或 下载预录数据集
-   ↓ datasets/dataset.hdf5
+   ↓ ~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5
 annotate_demos.py  —— 子任务标注（--auto 自动 / 手动打边界）
    ↓ annotated_dataset.hdf5
 generate_dataset.py —— 随机化场景中自动重拼接生成海量演示（并行环境）
@@ -392,7 +392,7 @@ robomimic play.py —— 回放评估
 ### 6.3 本地学习操作方案（推荐：30 分钟跑通 Mimic 小规模全流程）
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ①（可选）跳过手动录制：下载官方预录演示集（~3MB）
 wget -c -P ./datasets \
@@ -401,18 +401,18 @@ wget -c -P ./datasets \
 # ② 自动标注（子任务边界）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 --visualizer kit --auto \
-  --input_file ./datasets/dataset.hdf5 --output_file ./datasets/annotated_dataset.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5 --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_dataset.hdf5
 
 # ③ 小规模生成（先 10 条验证；跑通后再放大到 1000，本机建议 --num_envs 32~64）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 32 --generation_num_trials 10 \
-  --input_file ./datasets/annotated_dataset.hdf5 \
-  --output_file ./datasets/generated_dataset_small.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_dataset.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_small.hdf5
 
 # ④ BC 训练（state 模式，本机可行）
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel --algo bc \
-  --dataset ./datasets/generated_dataset_small.hdf5
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_small.hdf5
 
 # ⑤ 回放评估（checkpoint 路径见训练日志输出 logs/robomimic/...）
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/play.py \

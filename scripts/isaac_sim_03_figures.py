@@ -40,7 +40,7 @@ from matplotlib import font_manager
 # --------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[1]                      # IsaacDataCollection/
 OUT_DIR = ROOT / "docs" / "images" / "isaac-sim-03"
-DEFAULT_DATASETS = Path.home() / "code" / "isaac" / "isaaclab" / "datasets"
+DEFAULT_DATASETS = Path.home() / "code" / "isaac" / "IsaacDataCollection" / "datasets"
 
 FONT = "Noto Sans CJK SC"
 
@@ -203,7 +203,7 @@ def fig3(out: Path) -> None:
 # --------------------------------------------------------------------------
 def fig4(out: Path, ds_root: Path, demo: str = "demo_1") -> None:
     setup_matplotlib()
-    f = h5py.File(ds_root / "20261012" / "dataset_keyboard.hdf5", "r")
+    f = h5py.File(ds_root / "dataset_keyboard.hdf5", "r")
     g = f["data"][demo]
     actions = np.asarray(g["actions"])
     eef = np.asarray(g["obs/eef_pos"])
@@ -302,7 +302,7 @@ def fig6(out: Path, ds_root: Path) -> None:
     it = f["data"]
     seed_lens = np.array([int(it[k].attrs.get("num_samples", 0)) for k in it.keys()])
     f.close()
-    f = h5py.File(ds_root / "generated_gamepad_r2_300.hdf5", "r")
+    f = h5py.File(ds_root / "generated_gamepad_300.hdf5", "r")
     it = f["data"]
     gen_lens = np.array([int(it[k].attrs.get("num_samples", 0)) for k in it.keys()])
     f.close()

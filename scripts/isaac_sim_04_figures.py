@@ -37,8 +37,8 @@ from matplotlib.patches import FancyBboxPatch
 # --------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[1]                      # IsaacDataCollection/
 OUT_DIR = ROOT / "docs" / "images" / "isaac-sim-04"
-DEFAULT_DATASET = (Path.home() / "code" / "isaac" / "isaaclab" / "datasets" /
-                   "20261012" / "dataset_keyboard.hdf5")
+DEFAULT_DATASET = (Path.home() / "code" / "isaac" / "IsaacDataCollection" / "datasets" /
+                   "dataset_keyboard.hdf5")
 
 FONT = "Noto Sans CJK SC"
 

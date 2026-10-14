@@ -86,7 +86,7 @@ OSError: Unable to synchronously open file
 ### 3.1 数据从哪来
 
 ```
-teleop record（--dataset_file ./datasets/xxx.hdf5）
+teleop record（--dataset_file ~/code/isaac/IsaacDataCollection/datasets/xxx.hdf5）
     ↓
 RecorderManager：每条成功演示触发一次导出
     ↓
@@ -205,7 +205,7 @@ dataset_keyboard.hdf5
 ```python
 import h5py
 
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     print("文件属性:", dict(f.attrs))                  # format_version
     data = f["data"]
     print("env_args:", data.attrs["env_args"])          # JSON 字符串
@@ -221,7 +221,7 @@ with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
 读取时用**切片**而不是整组读——`g["obs/joint_pos"][:100]` 只解压相关分块，大数据集友好：
 
 ```python
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     g = f["data/demo_0"]
     actions = g["actions"][:]                    # (T,7) ndarray
     joint = g["obs/joint_pos"][:100]             # 只读前 100 步
@@ -288,11 +288,11 @@ with h5py.File("merged.hdf5", "r+") as f:
 import h5py, numpy as np
 
 # ① 只筛"成功"演示
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     good = [k for k in f["data"] if f["data"][k].attrs.get("success")]
 
 # ② 单条演示 → (obs, action) 序列（喂自定义训练脚本）
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     g = f["data/demo_0"]
     actions = g["actions"][:]                       # 标签
     obs = {k: g["obs"][k][:] for k in g["obs"]}     # 输入

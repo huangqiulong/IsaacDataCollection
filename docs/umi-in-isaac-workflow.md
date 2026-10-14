@@ -14,7 +14,7 @@
 ## 0. 前置
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 ```
 
 （环境重建、venv 说明见综述 §0；本机资产已齐备。）
@@ -78,7 +78,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 1 \
-  --dataset_file ./datasets/dataset_umi_1.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_1.hdf5
 
 # ② 验证通过后补到 3~5 条（换文件名避免覆盖；只导出成功演示）
 ./isaaclab.sh teleop record \
@@ -86,7 +86,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 5 \
-  --dataset_file ./datasets/dataset_umi_5.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5
 ```
 
 操作纪律与成功判定**与遥操作手册 §4 完全一致**（从下到上：蓝→红→绿；失败按 R；成功等 10 步保护窗口）。
@@ -96,7 +96,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
 ```bash
 HDF5_USE_FILE_LOCKING=FALSE .venv/bin/python - <<'PY'
 import h5py
-f = h5py.File('datasets/dataset_umi_1.hdf5', 'r')
+f = h5py.File('/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_umi_1.hdf5', 'r')
 g = f['data/demo_0']
 print('attrs:', dict(g.attrs))                    # success / num_samples
 print('obs 键:', list(g['obs'].keys()))            # 期望含 table_cam / wrist_cam
@@ -131,14 +131,14 @@ PY
 ```bash
 # 导出两个相机的视频（工具默认 keys 已含 table_cam/wrist_cam）
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
-  --input_file ./datasets/dataset_umi_5.hdf5 \
-  --output_dir ./datasets/umi_videos \
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5 \
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/umi_videos \
   --input_keys table_cam wrist_cam \
   --video_width 200 --video_height 200
 
 # 只看某一条：
 #   --demo_id 0
-ls ./datasets/umi_videos/
+ls ~/code/isaac/IsaacDataCollection/datasets/umi_videos/
 ```
 
 产物：`umi_videos/table_cam_demo_0.mp4`、`wrist_cam_demo_0.mp4` ——
@@ -149,11 +149,11 @@ ls ./datasets/umi_videos/
 ```bash
 # 数据集统计（对 image 键会自动跳过或只报形状；关注 success / 步数 / 夹爪）
 python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py \
-  ./datasets/dataset_umi_5.hdf5
+  ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5
 
 # 曲线可视化（动作/末端轨迹等；图像不画）
 python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
-  ./datasets/dataset_umi_5.hdf5 --demo demo_0 --out ./datasets/umi_plot_0.png
+  ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5 --demo demo_0 --out ~/code/isaac/IsaacDataCollection/datasets/umi_plot_0.png
 ```
 
 **质检要点**（视觉数据的额外门槛）：
@@ -182,7 +182,7 @@ python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Visuomotor \
   --algo bc \
-  --dataset ./datasets/dataset_umi_5.hdf5
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5
 ```
 
 - ⚠️ **8GB 显存注意**：本机视觉 BC 未实测；若 OOM，编辑/复制 `bc_rnn_image_200.json`
@@ -197,14 +197,14 @@ python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Visuomotor-Mimic-v0 \
   --visualizer kit --auto \
-  --input_file ./datasets/dataset_umi_5.hdf5 \
-  --output_file ./datasets/annotated_umi.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_5.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_umi.hdf5
 
 # ② 生成（相机渲染使生成变慢；8GB 用小并发）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 8 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_umi.hdf5 \
-  --output_file ./datasets/generated_umi_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_umi.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_umi_100.hdf5
 ```
 
 > Mimic 全流程原理与参数细节见 [simulation-data-in-isaac-workflow.md](./simulation-data-in-isaac-workflow.md)。
@@ -249,21 +249,21 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate
 
 # 采集（1 条验证 → 5 条正式）
 ./isaaclab.sh teleop record --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Visuomotor \
-  --visualizer kit --teleop_device keyboard --num_demos 1 --dataset_file ./datasets/dataset_umi_1.hdf5
+  --visualizer kit --teleop_device keyboard --num_demos 1 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_1.hdf5
 
 # 处理（导出视频 / 统计 / 曲线）
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py --input_file <hdf5> \
-  --output_dir ./datasets/umi_videos --input_keys table_cam wrist_cam --video_width 200 --video_height 200
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/umi_videos --input_keys table_cam wrist_cam --video_width 200 --video_height 200
 python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py <hdf5>
 python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py <hdf5> --demo demo_0
 
 # 使用（增广 → 训练 → 评估）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Visuomotor-Mimic-v0 --visualizer kit --auto \
-  --input_file <hdf5> --output_file ./datasets/annotated_umi.hdf5
+  --input_file <hdf5> --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_umi.hdf5
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 8 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_umi.hdf5 --output_file ./datasets/generated_umi_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_umi.hdf5 --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_umi_100.hdf5
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Visuomotor --algo bc --dataset <hdf5>
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/play.py \

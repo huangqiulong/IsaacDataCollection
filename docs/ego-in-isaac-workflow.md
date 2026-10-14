@@ -15,7 +15,7 @@
 ## 0. 前置
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 ```
 
 **链条总览**（约 30~60 分钟，含下载与两次小规模生成）：
@@ -64,7 +64,7 @@ G1 在仓库场景里（含货架叉车、箱子、两张桌子）先**移动**�
 # URL 已验证存在（HTTP 200）；S3 直连较慢，几分钟
 wget -c -P ./datasets \
   "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Mimic/pick_place_datasets/dataset_annotated_g1_locomanip.hdf5"
-ls -la ./datasets/dataset_annotated_g1_locomanip.hdf5
+ls -la ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5
 ```
 
 ### 2.2 步骤 ②：Mimic 生成"操作段"数据（种子扩充）
@@ -75,8 +75,8 @@ ls -la ./datasets/dataset_annotated_g1_locomanip.hdf5
 # 小规模先跑通（20 条）；8GB 卡用小并发
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --device cuda --num_envs 8 --generation_num_trials 20 \
-  --input_file ./datasets/dataset_annotated_g1_locomanip.hdf5 \
-  --output_file ./datasets/generated_dataset_g1_locomanip.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5
 ```
 
 > ⚠️ 若 CUDA 下出现不稳定（G1 场景较重），可改 `--device cpu`（稳妥但慢很多）。
@@ -90,9 +90,9 @@ ls -la ./datasets/dataset_annotated_g1_locomanip.hdf5
   --device cuda \
   --kit_args="--enable isaacsim.replicator.experimental.mobility_gen" \
   --task="Isaac-G1-SteeringWheel-Locomanipulation" \
-  --dataset ./datasets/generated_dataset_g1_locomanip.hdf5 \
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5 \
   --num_runs 1 --lift_step 60 --navigate_step 130 \
-  --output_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
   --sensor_camera_view --visualizer kit
 # 高分辨率第一人称帧（320×512，默认 160×256）：
 #   在上面命令加 --high_res_video
@@ -118,7 +118,7 @@ ls -la ./datasets/dataset_annotated_g1_locomanip.hdf5
 ```bash
 HDF5_USE_FILE_LOCKING=FALSE .venv/bin/python - <<'PY'
 import h5py
-f = h5py.File('datasets/generated_dataset_g1_locomanipulation_sdg.hdf5', 'r')
+f = h5py.File('/home/dillon/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5', 'r')
 print('顶层:', list(f.keys()))
 demo = f['data/demo_0']
 print('demo_0 组:', list(demo.keys())[:12])
@@ -152,13 +152,13 @@ N = 演示步数。同时会有导航/物体状态等标量键。
 
 ```bash
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
-  --input_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
-  --output_dir ./datasets/ego_videos \
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_videos \
   --input_keys robot_pov_cam \
   --video_width 256 --video_height 160
 # --high_res_video 录的用：--video_width 512 --video_height 320
 
-ls ./datasets/ego_videos/   # robot_pov_cam_demo_0.mp4
+ls ~/code/isaac/IsaacDataCollection/datasets/ego_videos/   # robot_pov_cam_demo_0.mp4
 ```
 
 打开视频，你会看到"**机器人眼中**"的完整过程：先走位、再到桌边、伸右手把物体搬去另一张桌——
@@ -168,8 +168,8 @@ ls ./datasets/ego_videos/   # robot_pov_cam_demo_0.mp4
 
 ```bash
 python scripts/imitation_learning/locomanipulation_sdg/plot_navigation_trajectory.py \
-  --input_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
-  --output_dir ./datasets/ego_plots
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_plots
 # 可选：--demo_filter demo_0
 ```
 
@@ -181,7 +181,7 @@ python scripts/imitation_learning/locomanipulation_sdg/plot_navigation_trajector
 
 ```bash
 python scripts/imitation_learning/locomanipulation_sdg/gr00t/convert_dataset.py \
-  ./datasets ./datasets/lerobot_g1_locomanip
+  ./datasets ~/code/isaac/IsaacDataCollection/datasets/lerobot_g1_locomanip
 ```
 
 - 输入：目录（批量转该目录下所有 `*.hdf5`）；输出：LeRobot 目录结构；
@@ -239,7 +239,7 @@ python scripts/imitation_learning/locomanipulation_sdg/gr00t/convert_dataset.py 
 ### 6.1 命令速查
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ① 下载预标注（5MB）
 wget -c -P ./datasets "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Mimic/pick_place_datasets/dataset_annotated_g1_locomanip.hdf5"
@@ -247,25 +247,25 @@ wget -c -P ./datasets "https://omniverse-content-production.s3-us-west-2.amazona
 # ② Mimic 生成操作数据
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --device cuda --num_envs 8 --generation_num_trials 20 \
-  --input_file ./datasets/dataset_annotated_g1_locomanip.hdf5 \
-  --output_file ./datasets/generated_dataset_g1_locomanip.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5
 
 # ③ SDG 生成（含 ego 相机帧）
 ./isaaclab.sh -p scripts/imitation_learning/locomanipulation_sdg/generate_data.py \
   --device cuda --kit_args="--enable isaacsim.replicator.experimental.mobility_gen" \
   --task="Isaac-G1-SteeringWheel-Locomanipulation" \
-  --dataset ./datasets/generated_dataset_g1_locomanip.hdf5 \
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5 \
   --num_runs 1 --lift_step 60 --navigate_step 130 \
-  --output_file ./datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
   --sensor_camera_view --visualizer kit
 
 # ④ 处理：视频 / 轨迹图 / LeRobot 转换
 ./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py --input_file <sdg.hdf5> \
-  --output_dir ./datasets/ego_videos --input_keys robot_pov_cam --video_width 256 --video_height 160
+  --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_videos --input_keys robot_pov_cam --video_width 256 --video_height 160
 python scripts/imitation_learning/locomanipulation_sdg/plot_navigation_trajectory.py \
-  --input_file <sdg.hdf5> --output_dir ./datasets/ego_plots
+  --input_file <sdg.hdf5> --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_plots
 python scripts/imitation_learning/locomanipulation_sdg/gr00t/convert_dataset.py \
-  ./datasets ./datasets/lerobot_g1_locomanip
+  ./datasets ~/code/isaac/IsaacDataCollection/datasets/lerobot_g1_locomanip
 ```
 
 ### 6.2 FAQ

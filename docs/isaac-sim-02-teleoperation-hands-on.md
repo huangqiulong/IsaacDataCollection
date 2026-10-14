@@ -38,7 +38,7 @@
 - 下载版 Isaac Sim 的环境里，命令前先激活虚拟环境：`cd isaaclab && source .venv/bin/activate`；
 - 跑之前看一眼 `nvidia-smi`：确认没有其它进程占着显卡（一次只跑一个 Isaac 进程）；
 - 准备 5GB 以上磁盘余量（日志与数据集会持续增长）；
-- 所有数据集统一放 `./datasets/` 目录（先 `mkdir -p datasets`）。
+- 所有数据集统一放 `~/code/isaac/IsaacDataCollection/datasets/` 目录（先 `mkdir -p ~/code/isaac/IsaacDataCollection/datasets`）。
 
 ## 3. 设备：键盘、手柄与鼠标
 
@@ -77,7 +77,7 @@ Isaac Lab 内置了 Xbox 手柄设备类（按键映射接近游戏习惯：左�
   --visualizer kit \
   --teleop_device gamepad \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_gamepad.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 ```
 
 > 小提示：手柄没反应时，先点一下 Isaac Sim 窗口让它获得焦点；Linux 下用 `ls /dev/input/js*` 确认设备节点存在。
@@ -118,7 +118,7 @@ Isaac Lab 内置了 Xbox 手柄设备类（按键映射接近游戏习惯：左�
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 一次会话的完整流转如下——失败与成功各有明确通路，不需要你记额外规则：
@@ -155,7 +155,7 @@ Isaac Lab 内置了 Xbox 手柄设备类（按键映射接近游戏习惯：左�
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit --num_envs 1 \
   --reset_sim_buffer_each_episode \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 预期 10/10 条回放成功。个别失败属正常边界情况（该条录制时依赖了太多人类实时微调）——追求高质量时删掉重录即可。
@@ -167,7 +167,7 @@ Isaac Lab 内置了 Xbox 手柄设备类（按键映射接近游戏习惯：左�
 ```python
 import h5py
 
-with h5py.File("./datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     for k in f["data"]:                      # 逐条演示
         d = f["data"][k]
         actions = d["actions"][:]
@@ -221,8 +221,8 @@ with h5py.File("./datasets/dataset_keyboard.hdf5", "r") as f:
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 \
   --visualizer kit --auto \
-  --input_file ./datasets/dataset_keyboard.hdf5 \
-  --output_file ./datasets/annotated_kbd.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5
 ```
 
 - **成功标志**：终端打印 `Exported 9 (out of 10) annotated episodes.`（数字随数据变化）；
@@ -235,14 +235,14 @@ with h5py.File("./datasets/dataset_keyboard.hdf5", "r") as f:
 # 小规模验证
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 16 --generation_num_trials 10 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_small.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_small.hdf5
 
 # 跑通后放大（8GB 显存建议 --num_envs 32~64）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 32 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 - **生成成功率是本任务最直接的数据质量信号**（官方参考：state 模式约 40%；种子和标注质量好可以更高）；
@@ -256,7 +256,7 @@ with h5py.File("./datasets/dataset_keyboard.hdf5", "r") as f:
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --algo bc \
-  --dataset ./datasets/generated_kbd_100.hdf5
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 训练日志与 checkpoint 在 `logs/robomimic/...`（终端会打印路径）。先用小数据集跑 20~50 epoch 验证链路即可。

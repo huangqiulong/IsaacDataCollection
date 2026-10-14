@@ -80,6 +80,7 @@ IsaacDataCollection/
 │   ├── isaac-sim-01~04-*.md  # Blog series (4 articles)
 │   ├── *.md                  # Detailed documents (survey, hands-on, Mimic, HDF5, ...)
 │   └── images/               # Figures used by the blog series
+├── datasets/                 # Sample dataset (dataset_gamepad.hdf5: 30 gamepad teleop demos)
 └── scripts/                  # Companion tooling
 ```
 
@@ -89,10 +90,10 @@ Prerequisites: a machine with Isaac Sim / Isaac Lab installed. The utility scrip
 
 ```bash
 # 1) Dataset quality check (replace the HDF5 path with yours)
-python scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5
+python scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
 # 2) Visualize a single demonstration
-python scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5 --demo demo_1
+python scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5 --demo demo_1
 
 # 3) Regenerate blog figures
 python scripts/isaac_sim_01_figures.py              # all figures

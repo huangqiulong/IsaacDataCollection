@@ -10,3 +10,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# 数据集：仅上传 dataset_gamepad.hdf5（原始数据）；其余文件一律忽略
+datasets/*
+!datasets/dataset_gamepad.hdf5

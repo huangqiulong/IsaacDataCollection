@@ -78,6 +78,7 @@ IsaacDataCollection/
 │   ├── isaac-sim-01~04-*.md  # 系列技术博客（四篇）
 │   ├── *.md                  # 详细文档（综述、实操、Mimic、HDF5 等）
 │   └── images/               # 博客配图（isaac-sim-01 ~ 04）
+├── datasets/                 # 示例数据集（dataset_gamepad.hdf5：30 条手柄遥操演示）
 └── scripts/                  # 配套工具脚本
 ```
 
@@ -87,10 +88,10 @@ IsaacDataCollection/
 
 ```bash
 # 1) 数据集质检（把 HDF5 换成你的数据集路径）
-python scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5
+python scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
 # 2) 单条演示曲线可视化
-python scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5 --demo demo_1
+python scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5 --demo demo_1
 
 # 3) 重新生成某篇博客的全部配图
 python scripts/isaac_sim_01_figures.py            # 全部

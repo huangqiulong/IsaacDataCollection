@@ -8,7 +8,7 @@
   (gamepad) 或鼠标(mouse)录制, 须先注册带相应 teleop_devices 的任务变体
   (见 ``isaaclab_teleop_extras.py``)。本脚本负责"先注册、再调官方脚本"。
 
-用法(在任意目录; 建议在 isaaclab 目录下跑, 数据集相对路径即为 isaaclab/datasets):
+用法(在任意目录; 建议在 isaaclab 目录下跑; 数据集统一放 ~/code/isaac/IsaacDataCollection/datasets/, 命令中请用绝对路径):
 
     # 热身(不录制): 新手柄/鼠标先试手感
     ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py run \\
@@ -19,12 +19,12 @@
     ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record \\
         --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop \\
         --teleop_device gamepad --visualizer kit \\
-        --num_demos 10 --dataset_file ./datasets/dataset_gamepad.hdf5
+        --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
     # 回放(与设备无关, 但为保持习惯也支持):
     ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py replay \\
         --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop \\
-        --visualizer kit --num_envs 1 --dataset_file ./datasets/dataset_gamepad.hdf5
+        --visualizer kit --num_envs 1 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
 可用 ``--teleop_device``: keyboard | spacemouse | gamepad | mouse
   - keyboard: 经本启动器时使用**增强版**(C/V 绕 Z 轴 yaw 灵敏度 ×3, 可用环境

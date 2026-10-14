@@ -1,7 +1,7 @@
 # HDF5 格式详解:结构、可视化与数据处理实战
 
 > 面向 **Isaac Lab 遥操作 / 模仿学习数据集** 的完整指南。
-> 本文所有文件结构、数值、工具行为均在本工作区**实测**(2026-10-11,样本:`isaaclab/datasets/dataset_keyboard.hdf5`,键盘遥操作 Stack-Cube 任务)。
+> 本文所有文件结构、数值、工具行为均在本工作区**实测**(2026-10-11,样本:`IsaacDataCollection/datasets/dataset_keyboard.hdf5`,键盘遥操作 Stack-Cube 任务)。
 >
 > 相关文档:
 > - [`teleoperation-hands-on-franka-stack-cube.md`](./teleoperation-hands-on-franka-stack-cube.md) — 遥操作录数实操手册(§6 数据处理、§7 质量评估)
@@ -142,7 +142,7 @@ HDF5 文件开头 8 字节是固定的**魔数**(文件签名):
 ### 3.1 数据从哪来(写入流程)
 
 ```
-teleop record (--dataset_file ./datasets/xxx.hdf5)
+teleop record (--dataset_file ~/code/isaac/IsaacDataCollection/datasets/xxx.hdf5)
         │
         ▼
 RecorderManager(每条成功演示触发一次导出)
@@ -306,7 +306,7 @@ states[t] == obs[t+1](逐值相等,已抽查多对象多个 t)
 cd ~/code/isaac/isaaclab && source .venv/bin/activate
 python - <<'PY'
 import h5py
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     print("文件属性:", dict(f.attrs))                  # format_version
     data = f["data"]
     print("env_args:", data.attrs["env_args"])          # JSON 字符串
@@ -327,7 +327,7 @@ PY
 
 ```python
 import h5py, numpy as np, torch
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     g = f["data/demo_0"]
     actions = g["actions"][:]                    # ndarray (T,7)
     joint   = g["obs/joint_pos"][:100]           # 只读前 100 步(切片读,不必全量)
@@ -341,9 +341,9 @@ obs_t = {k: torch.tensor(g["obs"][k][:]) for k in g["obs"]}       # 组 → dict
 对指定演示画 4 张图:**动作曲线 / 关节角 / 末端位置 / 末端 XY 轨迹**:
 
 ```bash
-python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5
+python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 # 选演示、指定输出:
-python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ./datasets/dataset_keyboard.hdf5 \
+python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 \
     --demo demo_1 --out /tmp/demo_1.png
 ```
 
@@ -376,7 +376,7 @@ sudo apt install hdf5-tools        # 提供 h5ls / h5dump / h5stat / h5diff / h5
 
 **用法**:H5Web 已设为本工作区 `*.hdf5`/`*.h5` 的默认打开方式,**双击文件即进入 H5Web**;
 
-1. 打开 `isaaclab/datasets/dataset_keyboard.hdf5` → 左侧树显示组/数据集层级;
+1. 打开 `IsaacDataCollection/datasets/dataset_keyboard.hdf5` → 左侧树显示组/数据集层级;
 2. 点选数据集(如 `data/demo_0/actions`)→ 顶部切换可视化:**Inspect**(表格)/ **Line**(曲线)/ **Heatmap**(热图)/ **Matrix**(矩阵)/ **RGB**(图像);
 3. 数据集下方的 **Attributes** 区可查看 `num_samples`、`success` 等属性;
 4. 想换用 HDF5 Preview:右键 → "打开方式…" 选择(两个插件都声明了 `*.hdf5` 默认打开方式,工作区已用 `.vscode/settings.json` 的 `workbench.editorAssociations` 固定为 H5Web)。
@@ -403,7 +403,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit --num_envs 1 \
   --reset_sim_buffer_each_episode \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 (详见实操手册 §5;个别演示回放失败属正常边界情况。)
@@ -414,8 +414,8 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate
 
 ```bash
 ~/isaacsim/python.sh scripts/tools/hdf5_to_mp4.py \
-    --input_file ./datasets/dataset_with_cam.hdf5 \
-    --output_dir ./datasets/videos \
+    --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_with_cam.hdf5 \
+    --output_dir ~/code/isaac/IsaacDataCollection/datasets/videos \
     --input_keys wrist_cam table_cam --framerate 30
 ```
 
@@ -451,7 +451,7 @@ with h5py.File("/tmp/new_dataset.hdf5", "r+") as f:
     f["data"].attrs["total"] = 5    # 3 + 2
 
 # ③ 切片/分块读取(大文件友好;gzip 数据集切片读只解压相关块)
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     chunk = f["data/demo_0/actions"][100:200]      # 只读 100~199 步
 ```
 
@@ -462,7 +462,7 @@ with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
 ```bash
 cd ~/code/isaac/isaaclab && source .venv/bin/activate
 python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py \
-    ./datasets/dataset_keyboard.hdf5 --json ./datasets/stats_keyboard.json
+    ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 --json ~/code/isaac/IsaacDataCollection/datasets/stats_keyboard.json
 ```
 
 输出:每条演示的步数/成功标记/末端行程/动作抖动/夹爪开合统计 + 汇总 + **质量提示**(经验阈值)。
@@ -528,11 +528,11 @@ flowchart LR
 import h5py, numpy as np
 
 # ① 只看"成功"演示
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     good = [k for k in f["data"] if f["data"][k].attrs.get("success")]
 
 # ② 单条演示 → (obs, action) 序列(手动喂自定义训练脚本)
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     g = f["data/demo_0"]
     actions = g["actions"][:]                                  # 标签
     obs = {k: g["obs"][k][:] for k in g["obs"]}                # 输入(含 obs/actions)
@@ -541,7 +541,7 @@ with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
 np.savez_compressed("/tmp/demo_0.npz", actions=actions, **obs)
 
 # ④ 统计某一维度(例:末端 z 高度曲线)
-with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
+with h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r") as f:
     z = f["data/demo_0/obs/eef_pos"][:, 2]
     print("z 范围:", float(z.min()), "~", float(z.max()))
 ```
@@ -559,7 +559,7 @@ with h5py.File("datasets/dataset_keyboard.hdf5", "r") as f:
 
 | # | 现象 | 原因 | 处理 |
 | --- | --- | --- | --- |
-| 1 | 文件只有 **96 字节**,h5py 报 `truncated file: eof = 96, stored_eof = 2048` | **录制进程被强杀/崩溃**,HDF5 没完成"关闭即落盘"(本工作区实例:`dataset_keyboard_1.hdf5`,14:37 创建后无写入) | 截断文件**无法恢复**;重录。录制中不要 `kill -9`;要退出用 `Ctrl+C` 走正常收尾 |
+| 1 | 文件只有 **96 字节**,h5py 报 `truncated file: eof = 96, stored_eof = 2048` | **录制进程被强杀/崩溃**,HDF5 没完成"关闭即落盘"(本工作区曾出现:`dataset_keyboard_1.hdf5` 创建后无写入,该文件已清理) | 截断文件**无法恢复**;重录。录制中不要 `kill -9`;要退出用 `Ctrl+C` 走正常收尾 |
 | 2 | 文件存在但没有任何 `demo_*` 组 | 没触发成功判定(例如叠放顺序错),**只有成功演示才会写入** | 按实操手册 §4 流程重录(顺序:蓝→红→绿) |
 | 3 | 统计提示 `demo_0: 1301 步, 疑似过长` | 失败后没按 R 重开,混入了试错动作 | 质量筛查项;必要时删/重录该条(手册 §7.3) |
 | 4 | `ModuleNotFoundError: No module named 'h5py'`(系统 python) | 没用对 Python 环境 | `cd ~/code/isaac/isaaclab && source .venv/bin/activate` |

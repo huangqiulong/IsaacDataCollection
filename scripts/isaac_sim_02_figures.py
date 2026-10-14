@@ -37,8 +37,8 @@ from matplotlib.patches import FancyBboxPatch, Polygon
 # --------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[1]                      # IsaacDataCollection/
 OUT_DIR = ROOT / "docs" / "images" / "isaac-sim-02"
-DEFAULT_STATS = (Path.home() / "code" / "isaac" / "isaaclab" / "datasets" /
-                 "20261012" / "stats_keyboard.json")
+DEFAULT_STATS = (Path.home() / "code" / "isaac" / "IsaacDataCollection" / "datasets" /
+                 "stats_keyboard.json")
 
 FONT = "Noto Sans CJK SC"
 

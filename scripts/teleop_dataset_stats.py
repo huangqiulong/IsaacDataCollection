@@ -18,8 +18,8 @@
 
 用法:
     source ~/code/isaac/isaaclab/.venv/bin/activate    # 或任意有 h5py 的 python
-    python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5
-    python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5 --json ./datasets/stats.json
+    python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
+    python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 --json ~/code/isaac/IsaacDataCollection/datasets/stats.json
 """
 
 from __future__ import annotations

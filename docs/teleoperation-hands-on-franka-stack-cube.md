@@ -30,7 +30,7 @@ export UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
 > 本文所有命令默认：**先 `cd ~/code/isaac/isaaclab && source .venv/bin/activate`**。
 > （VS Code 工作区已配置**新开终端自动进入该 venv**：`.vscode/settings.json` + `ops/scripts/isaaclab_terminal_rc.sh`；其他终端请手动激活。）
-> 数据集相对路径 `./datasets/...` 均指 `isaaclab/datasets/`。先 `mkdir -p datasets`。
+> 数据集统一存放 `~/code/isaac/IsaacDataCollection/datasets/`（2026-10-14 起从 `isaaclab/datasets/` 迁入），下文命令中出现的 `datasets/...` 均指该目录。
 
 ### 0.2 开始前检查清单
 
@@ -209,7 +209,7 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 ### 3.2 Xbox360 手柄
@@ -236,7 +236,7 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
   --visualizer kit \
   --teleop_device gamepad \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_gamepad.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 ```
 
 > 手感调节：如太快/太慢，编辑 `isaaclab_teleop_extras.py` 里
@@ -253,7 +253,7 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
   --visualizer kit \
   --teleop_device mouse \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_mouse.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_mouse.hdf5
 ```
 
 > 鼠标命令是"速度式"：鼠标拖着走，机器人跟着动；停下即停。XY 平移与姿态旋转都需**按住对应键拖动**。
@@ -268,14 +268,14 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
 ### 4.1 完整命令
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 ./isaaclab.sh teleop record \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit \
   --teleop_device keyboard \
   --num_demos 10 \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 ### 4.2 会话流程（逐条演练）
@@ -307,7 +307,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --visualizer kit --num_envs 1 \
   --reset_sim_buffer_each_episode \
-  --dataset_file ./datasets/dataset_keyboard.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 - **预期**：10/10 条回放成功（每条都能叠好）。
@@ -353,7 +353,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
 ```bash
 python - <<'PY'
 import h5py
-f = h5py.File("./datasets/dataset_keyboard.hdf5", "r")
+f = h5py.File("/home/dillon/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5", "r")
 d = f["data"]
 print("demos:", list(d.keys()))
 demo = d["demo_0"]
@@ -366,8 +366,8 @@ PY
 ### 6.3 统计脚本（推荐）
 
 ```bash
-python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5
-# 可另存 JSON: --json ./datasets/stats_keyboard.json
+python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
+# 可另存 JSON: --json ~/code/isaac/IsaacDataCollection/datasets/stats_keyboard.json
 ```
 
 ---
@@ -426,8 +426,8 @@ L3 训练可用性（终极判据）:
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 \
   --visualizer kit --auto \
-  --input_file ./datasets/dataset_keyboard.hdf5 \
-  --output_file ./datasets/annotated_kbd.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5
 ```
 
 - **成功标志**：终端打印 `Exported 9 (out of 10) annotated episodes.`（数字随数据变化）；个别条被跳过属正常；
@@ -444,8 +444,8 @@ L3 训练可用性（终极判据）:
 ```bash
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 16 --generation_num_trials 10 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_small.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_small.hdf5
 ```
 
 跑通后放大（8GB 建议 `--num_envs 32~64`）：
@@ -453,8 +453,8 @@ L3 训练可用性（终极判据）:
 ```bash
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 32 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 - 终端会打印生成进度/成功统计；**生成成功率**是本任务最直接的数据质量信号
@@ -470,7 +470,7 @@ L3 训练可用性（终极判据）:
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --algo bc \
-  --dataset ./datasets/generated_kbd_100.hdf5
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 - 训练日志/checkpoint 在 `logs/robomimic/...`（终端会打印路径）；
@@ -497,7 +497,7 @@ L3 训练可用性（终极判据）:
 | BC 成功率 <20%                   | 数据量不足或覆盖单一 | 补采多样化演示；增加生成条数                        |
 
 > 数据管理建议：原始/标注/生成文件分名存放（`dataset_*.hdf5` / `annotated_*.hdf5` / `generated_*.hdf5`），
-> 每次重录换新文件名，避免覆盖；测试新想法前把 `datasets/` 打包归档。
+> 每次重录换新文件名，避免覆盖；测试新想法前把 `~/code/isaac/IsaacDataCollection/datasets/` 打包归档。
 
 ---
 
@@ -524,25 +524,25 @@ L3 训练可用性（终极判据）:
 
 ```bash
 # 通用前置
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # 键盘：run / record
 ./isaaclab.sh teleop run    --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --num_envs 1 --teleop_device keyboard
-./isaaclab.sh teleop record --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --teleop_device keyboard --num_demos 10 --dataset_file ./datasets/dataset_keyboard.hdf5
+./isaaclab.sh teleop record --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --teleop_device keyboard --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 
 # 手柄：run / record（经启动器）
 ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py run    --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --num_envs 1 --teleop_device gamepad
-./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --teleop_device gamepad --num_demos 10 --dataset_file ./datasets/dataset_gamepad.hdf5
+./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --teleop_device gamepad --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
 # 鼠标：run / record（经启动器）
 ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py run    --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --num_envs 1 --teleop_device mouse
-./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --teleop_device mouse --num_demos 10 --dataset_file ./datasets/dataset_mouse.hdf5
+./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop --visualizer kit --teleop_device mouse --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_mouse.hdf5
 
 # 回放（任意数据集）
-./isaaclab.sh teleop replay --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --num_envs 1 --reset_sim_buffer_each_episode --dataset_file ./datasets/dataset_keyboard.hdf5
+./isaaclab.sh teleop replay --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --num_envs 1 --reset_sim_buffer_each_episode --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 
 # 统计
-python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datasets/dataset_keyboard.hdf5
+python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5
 ```
 
 ### 10.2 关键参数
@@ -551,7 +551,7 @@ python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datase
 | ----------------------------------------------------- | --------------------------- | --------------------------------------- |
 | `--num_demos`                                       | 0（无限）                   | 目标成功演示条数；达到即自动退出        |
 | `--num_success_steps`                               | 10                          | 需连续保持成功的步数（防止"碰巧碰到"）  |
-| `--dataset_file`                                    | `./datasets/dataset.hdf5` | 输出文件；同名会覆盖                    |
+| `--dataset_file`                                    | `~/code/isaac/IsaacDataCollection/datasets/dataset.hdf5` | 输出文件；同名会覆盖                    |
 | `--visualizer kit`                                  | —                          | 必须有 GUI 才能遥操作                   |
 | `--reset_sim_buffer_each_episode`                   | off                         | 回放时每条之间强制 sim.reset()，更严格  |
 | generate:`--num_envs` / `--generation_num_trials` | —                          | 并行环境数 / 目标生成条数；8GB 用 16~32 |

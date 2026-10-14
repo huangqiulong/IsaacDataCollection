@@ -37,7 +37,7 @@
     ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record \\
         --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop \\
         --teleop_device gamepad --visualizer kit \\
-        --num_demos 10 --dataset_file ./datasets/dataset_gamepad.hdf5
+        --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
 状态说明(2026-10-12 更新):
   - Se3GamepadWithReset / Se3KeyboardYawBoost / 任务变体: 基于官方类包装, 风险低;

@@ -16,7 +16,7 @@
 ## 0. 前置
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 ```
 
 **本文主线**（以 Stack-Cube 为范例，其它操作任务同理换任务名）：
@@ -78,8 +78,8 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 \
   --visualizer kit --auto \
-  --input_file ./datasets/dataset_keyboard.hdf5 \
-  --output_file ./datasets/annotated_kbd.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5
 ```
 
 - 终端出现 **"Annotation of all demos done"** = 成功；
@@ -92,14 +92,14 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 # 先 10 条验证（8GB 卡小并发）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 16 --generation_num_trials 10 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_small.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_small.hdf5
 
 # 跑通后放大（8GB 建议 32~64 并发）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 32 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_kbd.hdf5 \
-  --output_file ./datasets/generated_kbd_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 关键参数（源码核对）：
@@ -135,16 +135,16 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 ```bash
 # ① 数据集统计（条数/步数/夹爪行为）
 python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py \
-  ./datasets/generated_kbd_100.hdf5
+  ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 
 # ② 曲线抽查（挑几条看动作连续性——拼接线是否平滑）
 python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
-  ./datasets/generated_kbd_100.hdf5 --demo demo_0 --out ./datasets/gen_plot_0.png
+  ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5 --demo demo_0 --out ~/code/isaac/IsaacDataCollection/datasets/gen_plot_0.png
 
 # ③ 回放抽检（直观验证）
 ./isaaclab.sh -p scripts/tools/replay_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel --visualizer kit --num_envs 1 \
-  --dataset_file ./datasets/generated_kbd_100.hdf5
+  --dataset_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 ```
 
 **质检标准**：步数分布集中（无离群超长条）、动作曲线无跳变、回放成功率高。
@@ -154,8 +154,8 @@ python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
 ```bash
 # 合并多个生成批次（不同种子/时间跑的多个 hdf5 → 一个大集）
 python scripts/tools/merge_hdf5_datasets.py \
-  --input_files ./datasets/generated_kbd_batch1.hdf5 ./datasets/generated_kbd_batch2.hdf5 \
-  --output_file ./datasets/generated_kbd_merged.hdf5
+  --input_files ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_batch1.hdf5 ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_batch2.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_merged.hdf5
 ```
 
 - 命名纪律：`dataset_*(种子) / annotated_* / generated_*` 三级分开，批次带序号；
@@ -172,7 +172,7 @@ python scripts/tools/merge_hdf5_datasets.py \
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --algo bc \
-  --dataset ./datasets/generated_kbd_100.hdf5
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
   # 可选：--epochs 50（覆盖 JSON 里的训练轮数）；--name my_exp01
 ```
 
@@ -194,7 +194,7 @@ python scripts/tools/merge_hdf5_datasets.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel \
   --input_dir logs/robomimic/<实验名>/<时间戳>/models \
   --num_rollouts 20 --num_seeds 3 \
-  --log_dir ./datasets/eval_results
+  --log_dir ~/code/isaac/IsaacDataCollection/datasets/eval_results
 ```
 
 ### 4.3 规模化决策表
@@ -232,20 +232,20 @@ python scripts/tools/merge_hdf5_datasets.py \
 ### 6.1 命令速查
 
 ```bash
-cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p datasets
+cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/IsaacDataCollection/datasets
 
 # ② 标注（state 版任务；visuomotor 换 ...-Visuomotor-Mimic-v0）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 --visualizer kit --auto \
-  --input_file ./datasets/dataset_keyboard.hdf5 --output_file ./datasets/annotated_kbd.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_keyboard.hdf5 --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5
 
 # ③ 生成（小 → 大）
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 16 --generation_num_trials 10 \
-  --input_file ./datasets/annotated_kbd.hdf5 --output_file ./datasets/generated_kbd_small.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_small.hdf5
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --num_envs 32 --generation_num_trials 100 \
-  --input_file ./datasets/annotated_kbd.hdf5 --output_file ./datasets/generated_kbd_100.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_kbd.hdf5 --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_kbd_100.hdf5
 
 # 处理（统计 / 曲线 / 回放 / 合并）
 python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py <hdf5>
@@ -261,7 +261,7 @@ python scripts/tools/merge_hdf5_datasets.py --input_files <a.hdf5> <b.hdf5> --ou
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel --visualizer kit --num_rollouts 20 --checkpoint <pth>
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/robust_eval.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel --input_dir <models 目录> \
-  --num_rollouts 20 --num_seeds 3 --log_dir ./datasets/eval_results
+  --num_rollouts 20 --num_seeds 3 --log_dir ~/code/isaac/IsaacDataCollection/datasets/eval_results
 ```
 
 ### 6.2 FAQ

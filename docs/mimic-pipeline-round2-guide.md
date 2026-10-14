@@ -15,7 +15,7 @@
 > 3. 记录干净：旧文件原样保留作对照，新管线统一 `r2` 命名，避免编号/来源混淆；
 > 4. `merge_teleop_datasets.py` 依然有用：**分多次录制时**（如 15+15）用它合并。
 
-所有命令均在 `~/code/isaac/isaaclab` 目录下执行（`datasets/` 相对路径即 `isaaclab/datasets/`）。
+所有命令均在 `~/code/isaac/isaaclab` 目录下执行；数据集统一存放 `~/code/isaac/IsaacDataCollection/datasets/`（2026-10-14 由 `isaaclab/datasets/` 迁入），下文命令一律用绝对路径。
 
 ---
 
@@ -25,7 +25,7 @@
 | --- | --- | --- |
 | ① 录制 | 手柄**全新录 30 条**（建议分 2~3 次坐） | 1.5~2 h（人工）|
 | ② 质检 | `teleop_dataset_stats.py` 快速筛查 | 秒级 |
-| ③（可选）合并 | 仅分多批录制时：r2a+r2b → `dataset_gamepad_r2.hdf5` | 秒级 |
+| ③（可选）合并 | 仅分多批录制时：a+b → `dataset_gamepad.hdf5` | 秒级 |
 | ④ 标注 | annotate（30 条逐条回放）| ~75-90 min |
 | ⑤ 放大 | generate 目标 **300 条**（隔夜跑）| **~10-11 h** |
 | ⑥ 训练 | BC-RNN **6000 epoch** | ~2.5-3 h |
@@ -52,19 +52,19 @@ cd ~/code/isaac/isaaclab
 ./isaaclab.sh -p ~/code/isaac/IsaacDataCollection/scripts/isaaclab_teleop_launch.py record \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop \
   --teleop_device gamepad --visualizer kit \
-  --num_demos 30 --dataset_file ./datasets/dataset_gamepad_r2.hdf5
+  --num_demos 30 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 ```
 
 > ⚠️ **每次都用一个新文件名**：`teleop record` 对同名输出文件是**覆盖写**（recorder 以 `"w"` 模式打开）。
-> 一次坐录完 30 条就写 `dataset_gamepad_r2.hdf5`；分多次录则每次写独立文件
-> （`dataset_gamepad_r2a.hdf5`、`dataset_gamepad_r2b.hdf5`…），最后合并（§3）。第一轮旧文件原样保留对照。
+> 一次坐录完 30 条就写 `dataset_gamepad.hdf5`；分多次录则每次写独立文件
+> （`dataset_gamepad_a.hdf5`、`dataset_gamepad_b.hdf5`…），最后合并（§3）。第一轮旧文件已于 2026-10-14 清理。
 
 ---
 
 ## 2. 质检（不启动 Isaac）
 
 ```bash
-.venv/bin/python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ./datasets/dataset_gamepad_r2.hdf5
+.venv/bin/python ~/code/isaac/IsaacDataCollection/scripts/teleop_dataset_stats.py ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 ```
 
 看什么：
@@ -78,12 +78,12 @@ cd ~/code/isaac/isaaclab
 
 ## 3.（可选）合并 —— 仅当分多批录制时
 
-一次坐录完 30 条则**跳过本步**；分多次录制（如 r2a + r2b）时先合并：
+一次坐录完 30 条则**跳过本步**；分多次录制（如 a + b 两个文件）时先合并：
 
 ```bash
 .venv/bin/python ~/code/isaac/IsaacDataCollection/scripts/merge_teleop_datasets.py \
-  ./datasets/dataset_gamepad_r2.hdf5 \
-  ./datasets/dataset_gamepad_r2a.hdf5 ./datasets/dataset_gamepad_r2b.hdf5
+  ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5 \
+  ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad_a.hdf5 ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad_b.hdf5
 ```
 
 期望输出：`共 30 条演示, ... success=30/30`。
@@ -99,8 +99,8 @@ cd ~/code/isaac/isaaclab
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/annotate_demos.py \
   --task Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0 \
   --visualizer kit --auto \
-  --input_file ./datasets/dataset_gamepad_r2.hdf5 \
-  --output_file ./datasets/annotated_gamepad_r2.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/annotated_gamepad.hdf5
 ```
 
 - 期望：终端打印 `Exported X (out of 30) annotated episodes.`（X ≈ 27-30；个别条回放终判
@@ -115,8 +115,8 @@ cd ~/code/isaac/isaaclab
 ```bash
 ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --visualizer kit --num_envs 64 --generation_num_trials 300 \
-  --input_file ./datasets/annotated_gamepad_r2.hdf5 \
-  --output_file ./datasets/generated_gamepad_r2_300.hdf5
+  --input_file ~/code/isaac/IsaacDataCollection/datasets/annotated_gamepad.hdf5 \
+  --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_gamepad_300.hdf5
 ```
 
 - **语义**：`generation_guarantee=True`（默认）→ "**攒够 300 条成功**"才退出；终端统计行
@@ -133,7 +133,7 @@ cd ~/code/isaac/isaaclab
 ```bash
 ./isaaclab.sh -p scripts/imitation_learning/robomimic/train.py \
   --task IsaacContrib-Stack-Cube-Franka-IK-Rel --algo bc \
-  --dataset ./datasets/generated_gamepad_r2_300.hdf5 \
+  --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_gamepad_300.hdf5 \
   --name bc_rnn_stack_r2 \
   --epochs 6000
 ```
@@ -189,9 +189,11 @@ ls -td logs/robomimic/IsaacContrib-Stack-Cube-Franka-IK-Rel/bc_rnn_stack_r2/*/ |
 ## 附：文件命名约定
 
 ```
-datasets/
-  dataset_gamepad.hdf5           # 第一轮原始录制（10 条；保留作对照，不参与本轮）
-  dataset_gamepad_r2.hdf5        # 第二轮全新录制（30 条；分批录时先 r2a/r2b 再合并）
-  annotated_gamepad_r2.hdf5      # 标注后
-  generated_gamepad_r2_300.hdf5  # 放大生成后（300 条）
+~/code/isaac/IsaacDataCollection/datasets/
+  dataset_gamepad.hdf5           # 手柄原始录制（30 条；分批录时先 a/b 再合并）
+  annotated_gamepad.hdf5         # 标注后（29 条）
+  generated_gamepad_300.hdf5     # 放大生成后（300 条）
+  dataset_keyboard.hdf5          # （另一路）键盘演示 3 条；统计在 stats_keyboard.json
 ```
+
+> 命名归一（2026-10-14）：去除 `_r2` 后缀；旧归档 `20261012/` 已删除（键盘数据移回本目录）。
