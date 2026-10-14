@@ -458,7 +458,7 @@ wget -c -P ./datasets \
 4. **显存**（RTX 4070 Laptop 8GB）：Mimic 生成用 `--num_envs 32~64`；SkillGen 单环境 9.3GB 不可行；Cosmos/VLA 训练需服务器。
 5. **磁盘**：数据集与视频转换吃空间（根分区当前 ~17G 可用）；大文件下载前先确认剩余空间。
 6. **GPU 独占**：一次只跑一个 Isaac 进程；先 `nvidia-smi` 确认空闲（并行会互抢显存）。
-7. **网络**：S3 直连 10~40 KB/s（5MB 文件几分钟）；大文件可走 socks 代理（127.0.0.1:9909）；HuggingFace 需代理。
+7. **网络**：S3 直连 10~40 KB/s（5MB 文件几分钟）；大文件可走本地 socks 代理（如 127.0.0.1:2080）；HuggingFace 需代理。
 8. **HDF5 查看**：用 h5py 小脚本（见 §2.4 ④）；视频导出用 `hdf5_to_mp4.py`；导出键名与数据集 obs 组名对应（`wrist_cam`/`table_cam`/`robot_pov_cam`）。
 
 ---
