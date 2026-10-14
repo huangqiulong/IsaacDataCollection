@@ -6,6 +6,8 @@
 
 > **适合读者**：具身智能 / 机器人学习方向的学生与工程师；正在为模仿学习、强化学习、VLA 模型准备数据的团队。
 
+> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection)
+
 ## 0. 一分钟速览
 
 | 问题 | 一句话结论 |
@@ -292,6 +294,8 @@ print(list(demo["obs"].keys()))
 - **（一）数据采集方法总览**：五类采集方式（遥操作、动捕、UMI、EGO、仿真生成）的原理、数据格式与上手路径；
 - **（二）遥操作实操手册**：在 Isaac Lab 里完成一次完整的遥操作采数（键盘 / Xbox360 / 鼠标）；
 - **（四）HDF5 格式详解**：数据集结构、可视化与数据处理实战。
+
+**项目仓库（开源）**：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) —— 全部文章、配套脚本与图表源码。
 
 ## 参考资料
 

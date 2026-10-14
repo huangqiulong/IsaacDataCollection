@@ -2,6 +2,8 @@
 
 这是系列的**第二篇**。上一篇我们把五类数据采集方式过了一遍；这一篇把其中的"遥操作录数"这条产线**从头到尾走一遍**：在 Isaac Sim / Isaac Lab 里用三种输入设备遥操作 Franka 机械臂完成"三块积木叠塔"，录制数据集，并跑通「数据检查 → 质量评估 → Mimic 增广 → 行为克隆训练」的完整闭环。
 
+> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection)
+
 ## 0. 一分钟速览
 
 | 问题 | 结论 |
@@ -315,6 +317,8 @@ with h5py.File("./datasets/dataset_keyboard.hdf5", "r") as f:
 - **（一）数据采集方法总览**：五类采集方式（遥操作、动捕、UMI、EGO、仿真生成）的原理、数据格式与上手路径；
 - **（三）Isaac Sim 仿真遥操采集与真机采集对比**：两条数据路线放在一起逐项对照；
 - **（四）HDF5 格式详解**：数据集结构、可视化与数据处理实战。
+
+**项目仓库（开源）**：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) —— 全部文章、配套脚本与图表源码。
 
 ## 参考资料
 

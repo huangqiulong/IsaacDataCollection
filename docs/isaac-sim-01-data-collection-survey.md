@@ -2,6 +2,8 @@
 
 这是「Isaac Sim 仿真模拟采集数据方法综述」系列的**第一篇**。本篇把 **五类数据采集方式**逐一拆开：每一类**真机怎么做、数据长什么样、在 Isaac Sim 里如何复刻、怎么上手跑通**。读完你应该能判断：自己的任务应该从哪条"数据产线"开始。
 
+> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection)
+
 ## 0. 先看全景：五类方式，五种数据
 
 ![图 1：五类采集方式速览](./images/isaac-sim-01/fig1-five-cards.png)
@@ -349,6 +351,8 @@ wget -c -P ./datasets \
 - **（二）遥操作实操手册**：在 Isaac Lab 里完成一次完整的遥操作采数（键盘 / Xbox360 / 鼠标）——从热身、录制、质检到 Mimic→BC 全闭环；
 - **（三）Isaac Sim 仿真遥操采集与真机采集对比**：两条数据路线放在一起逐项对照；
 - **（四）HDF5 格式详解**：数据集结构、可视化与数据处理实战。
+
+**项目仓库（开源）**：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) —— 全部文章、配套脚本与图表源码。
 
 ## 参考资料
 

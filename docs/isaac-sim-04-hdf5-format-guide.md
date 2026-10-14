@@ -2,6 +2,8 @@
 
 这是系列的**第四篇**。前三篇里反复出现一个文件格式——HDF5：遥操作录出来的数据是它，Mimic 生成的数据还是它，训练脚本吃的也是它。这一篇把它讲透：**文件结构长什么样、每个字段是什么含义、怎么打开、怎么处理、有哪些坑**。所有结论都基于实测样本（键盘遥操作 Stack-Cube 数据集，3 条演示）并对照源码核对。
 
+> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection)
+
 ## 0. 一分钟速览
 
 | 问题 | 答案 |
@@ -334,6 +336,8 @@ np.savez_compressed("/tmp/demo_0.npz", actions=actions, **obs)
 - **（一）数据采集方法总览**：五类采集方式（遥操作、动捕、UMI、EGO、仿真生成）的原理、数据格式与上手路径；
 - **（二）遥操作实操手册**：在 Isaac Lab 里完成一次完整的遥操作采数（键盘 / Xbox360 / 鼠标）；
 - **（三）Isaac Sim 仿真遥操采集与真机采集对比**：两条数据路线放在一起逐项对照。
+
+**项目仓库（开源）**：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) —— 全部文章、配套脚本与图表源码。
 
 ## 参考资料
 
