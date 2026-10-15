@@ -14,10 +14,12 @@
 
 - **五类数据采集方式全景**：遥操作、动捕、UMI、EGO、仿真生成（Mimic / RL / SDG），以及与真机采集的逐项对比；
 - **可复现的实操手册**：从零开始用键盘/Xbox 手柄遥操作 Franka 机械臂完成"三块积木叠塔"，录制 HDF5 演示数据集；
+- **UMI 式视觉工作流**：腕部 + 桌面双相机数据的"采集 → 视频导出 → 体检 → 增广 → 视觉 BC"全链路实测（第五篇）；
+- **EGO 式第一人称数据**：仿真侧 G1 人形 Mimic 增广（20 条 / 4,790 帧）+ 移动操作 SDG（873 帧机器视角）→ LeRobot 格式转换；真机侧实测 EgoSuite-Open100K（HF Bucket 49 TB 级：MCAP 解析 → 手部骨架投影验证 → 伪动作构建，第六篇）；
 - **数据闭环**：种子演示 → Mimic 自动增广 → 行为克隆（BC）训练 → 成功率评估，每一步都有实测数字；
-- **格式深挖**：HDF5 数据集结构、时间对齐关系、四元数顺序、处理配方与常见坑（96 字节截断、合并修补等）。
+- **格式深挖**：HDF5 数据集结构、时间对齐关系、四元数顺序、处理配方与常见坑（96 字节截断、合并修补等）；LeRobot v2/v3 格式详解与 `lerobot/pusht` 公开集实操（第七篇）。
 
-所有内容都经过实机验证：键盘 3 条演示（2780 步）、Mimic 把 30 条种子放大到 **300 条演示（23.7 万帧）**、BC 策略评估成功率 **1/20 → 5/20**、真实动捕数据可视化等，原始数据与过程记录均可追溯。
+所有内容都经过实机验证：键盘 3 条演示（2780 步）、UMI 式双相机链路跑通（5 条演示 / 2,599 帧 / 双 200×200 相机）、Mimic 把 30 条种子放大到 **300 条演示（23.7 万帧）**、BC 策略评估成功率 **1/20 → 5/20**、G1 移动操作生成链路（Mimic 20 条 → SDG 873 帧 → LeRobot v2.0 转换）、EgoSuite-Open100K 真机集处理（3 集 / 61 MB）、真实动捕数据可视化等，原始数据与过程记录均可追溯。
 
 ## 效果预览
 
@@ -28,6 +30,18 @@
 <p align="center">
   <img src="docs/images/isaac-sim-02/fig2-keyboard.png" width="49%" alt="键盘遥操作键位图">
   <img src="docs/images/isaac-sim-03/fig6-scale-up.png" width="49%" alt="Mimic 规模化实测">
+</p>
+<p align="center">
+  <img src="docs/images/isaac-sim-05/fig4-camera-frames.png" width="49%" alt="UMI 式双相机真实帧（腕部 / 桌面）">
+  <img src="docs/images/isaac-sim-05/fig1-umi-vs-sim.png" width="49%" alt="真机 UMI 与 Isaac Visuomotor 对照">
+</p>
+<p align="center">
+  <img src="docs/images/egosuite-demo/fig2-hand-overlay.png" width="49%" alt="EgoSuite 骨架投影叠加（第一人称）">
+  <img src="docs/images/egosuite-demo/fig4-grip-signal.png" width="49%" alt="EgoSuite 捏合开度与语义分段">
+</p>
+<p align="center">
+  <img src="docs/images/isaac-sim-06/fig2-two-chains.png" width="49%" alt="EGO 数据工作流：仿真链 + 真机链">
+  <img src="docs/images/isaac-sim-07/fig1-files.png" width="49%" alt="LeRobot v3.0 目录结构与文件角色">
 </p>
 
 > 全部配图由仓库内脚本自动生成（`scripts/isaac_sim_0X_figures.py`），可复现、可修改。
@@ -40,6 +54,9 @@
 | （二） | [遥操作实操手册：Franka 摞方块（键盘 / Xbox360 / 鼠标）](docs/isaac-sim-02-teleoperation-hands-on.md) | 热身、录制、质检到 Mimic→BC 全闭环 |
 | （三） | [Isaac Sim 仿真遥操采集与真机采集对比](docs/isaac-sim-03-sim-vs-real-comparison.md) | 两条数据路线放在一起逐项对照（18 维） |
 | （四） | [HDF5 格式详解：结构、可视化与数据处理实战](docs/isaac-sim-04-hdf5-format-guide.md) | 数据集结构、时间对齐、处理配方与坑 |
+| （五） | [UMI 式数据工作流：仿真采集 → 数据处理 → 训练使用](docs/isaac-sim-05-umi-workflow.md) | 真机 UMI 的仿真对应物与全链路实测（双相机 + 视觉 BC） |
+| （六） | [EGO 式数据工作流：仿真采集 → 公开数据集处理 → 重定向示范](docs/isaac-sim-06-ego-workflow.md) | G1 第一人称 SDG + EgoSuite-Open100K 实测（骨架投影 / 伪动作） |
+| （七） | [LeRobot 数据格式详解：结构、下载与实操](docs/isaac-sim-07-lerobot-format-guide.md) | 格式深挖 + pusht 公开集下载实操 + VS Code 查看插件 |
 
 ## 详细文档
 
@@ -54,6 +71,7 @@
 | [mocap-in-isaac-workflow](docs/mocap-in-isaac-workflow.md) | 动捕数据（AMP / 运动跟踪）使用与可视化 |
 | [simulation-data-in-isaac-workflow](docs/simulation-data-in-isaac-workflow.md) | 仿真优先生成（Mimic / RL / SDG）全流程 |
 | [real-robot-teleop-and-sim-comparison](docs/real-robot-teleop-and-sim-comparison.md) | 真机遥操作设备与数据的详细对照（原始版） |
+| [egosuite-open100k-processing-demo](docs/egosuite-open100k-processing-demo.md) | EgoSuite-Open100K 上手实测：Bucket 下载 → MCAP 解析 → 骨架投影 / 伪动作示范 |
 
 ## 配套脚本
 
@@ -65,7 +83,11 @@
 | `scripts/bc_eval_diagnose.py` | BC 策略回放诊断（接近距离/叠放高度逐段打印） |
 | `scripts/isaaclab_teleop_launch.py` | 手柄录制启动器（注册 `-Teleop` 任务变体，不修改上游仓库） |
 | `scripts/isaaclab_teleop_extras.py` | 遥操作扩展（鼠标设备、手柄重置键等） |
-| `scripts/isaac_sim_01~04_figures.py` | 系列博客全部配图的生成脚本（matplotlib + graphviz） |
+| `scripts/isaac_sim_01~07_figures.py` | 系列博客全部配图的生成脚本（matplotlib + graphviz） |
+| `scripts/egosuite_download.sh` | EgoSuite-Open100K 的 HF Bucket 下载助手（list / task / get / sync） |
+| `scripts/egosuite_*.py` | EgoSuite 数据处理工具：结构检查 / 抽取 / 可视化 + 伪动作构建 |
+| `scripts/glfw_gamepad_mapping_patch.py` / `glfw_gamepad_mapping_test.py` | Xbox 蓝牙手柄（fw0509）GLFW 映射修补与诊断 |
+| `scripts/isaac_gamepad_mapping_dump.py` / `isaac_keyboard_yaw_probe.py` | 手柄键位映射导出、键盘 yaw 增强数值自检（无头 Kit） |
 
 ## 目录结构
 
@@ -75,9 +97,9 @@ IsaacDataCollection/
 ├── README_EN.md              # English README
 ├── LICENSE                   # BSD-3-Clause
 ├── docs/
-│   ├── isaac-sim-01~04-*.md  # 系列技术博客（四篇）
-│   ├── *.md                  # 详细文档（综述、实操、Mimic、HDF5 等）
-│   └── images/               # 博客配图（isaac-sim-01 ~ 04）
+│   ├── isaac-sim-01~07-*.md  # 系列技术博客（七篇）
+│   ├── *.md                  # 详细文档（综述、实操、Mimic、HDF5、EgoSuite 处理等）
+│   └── images/               # 博客配图（isaac-sim-01 ~ 07 + egosuite-demo）
 ├── datasets/                 # 示例数据集（dataset_gamepad.hdf5：30 条手柄遥操演示）
 └── scripts/                  # 配套工具脚本
 ```
@@ -98,13 +120,13 @@ python scripts/isaac_sim_01_figures.py            # 全部
 python scripts/isaac_sim_01_figures.py --only fig4  # 只生成指定图
 ```
 
-> 遥操作录制、Mimic 增广与训练评估的完整命令，见系列博客（二）与（四）。
+> 遥操作录制、Mimic 增广与训练评估的完整命令，见系列博客（二）、（四）与（五）~（七）。
 
 ## 实测环境
 
 - 硬件：RTX 4070 Laptop（8GB）× 1
 - 软件：Isaac Sim 6.1 · Isaac Lab 3.0 · Python 3.12
-- 任务：`IsaacContrib-Stack-Cube-Franka-IK-Rel`（三积木叠塔，蓝→红→绿）
+- 任务：`IsaacContrib-Stack-Cube-Franka-IK-Rel`（三积木叠塔，蓝→红→绿）；以及 `IsaacContrib-Stack-Cube-Franka-IK-Rel-Visuomotor`（腕部/桌面双相机视觉版）；`Isaac-Locomanipulation-G1-Abs-Mimic-v0`（第六篇 G1 Mimic 增广）与 `Isaac-G1-SteeringWheel-Locomanipulation`（第六篇 G1 第一人称移动操作 SDG）
 
 ## 许可与致谢
 

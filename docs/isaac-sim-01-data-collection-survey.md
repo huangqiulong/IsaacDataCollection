@@ -192,7 +192,7 @@ UMI 数据的本质是"**腕部同轴相机 + 末端相对位姿动作**"——�
   --num_demos 3 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5
 
 # ② 把腕部相机画面导出为 MP4（就是"UMI 式数据"的视频流）
-./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
+.venv/bin/python scripts/tools/hdf5_to_mp4.py \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5 \
   --output_dir ~/code/isaac/IsaacDataCollection/datasets/umi_videos --input_keys wrist_cam
 ```
@@ -224,9 +224,11 @@ EGO 数据来自**头戴设备**（Project Aria、GoPro 等）录制的人类第
 wget -c -P ./datasets \
   "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Mimic/pick_place_datasets/dataset_annotated_g1_locomanip.hdf5"
 
-# ② 小规模生成操作数据（20 条，8GB 显存用小并发）
-./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
-  --device cpu --num_envs 8 --generation_num_trials 20 \
+# ② 小规模生成操作数据（20 条；8GB 显存用 4 并发——实测 CUDA 8 并发会 OOM）
+#    若报 pinocchio_pywrap_default / undefined symbol 错：终端继承了 ROS 环境——开新的 isaaclab 终端，
+#    或见 ego-in-isaac-workflow.md §2.2 注手工清理 PYTHONPATH / LD_LIBRARY_PATH
+HDF5_USE_FILE_LOCKING=FALSE ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
+  --device cuda --num_envs 4 --generation_num_trials 20 \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \
   --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5
 
@@ -238,8 +240,8 @@ wget -c -P ./datasets \
   --dataset ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5 \
   --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_sdg.hdf5 --sensor_camera_view
 
-# ④ 导出第一人称视频（观看 robot_pov_cam_demo_0.mp4，即"机器人版 ego 数据"）
-./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
+# ④ 导出第一人称视频（观看 demo_0_robot_pov_cam.mp4，即“机器人版 ego 数据”）
+.venv/bin/python scripts/tools/hdf5_to_mp4.py \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_sdg.hdf5 \
   --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_videos \
   --input_keys robot_pov_cam --video_width 512 --video_height 320

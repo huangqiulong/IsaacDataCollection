@@ -194,11 +194,18 @@ dataset_keyboard.hdf5
 | 途径 | 适合场景 | 说明 |
 | --- | --- | --- |
 | Python + `h5py` | 编程查看一切；转 numpy / torch | 首选，环境里 `pip install h5py` 即用 |
-| VS Code 插件 **H5Web** | 图形界面点着看（树 + 表格 + 曲线/热图/RGB） | 装好后把 `*.hdf5` 关联到它即可双击打开 |
+| VS Code 插件 **H5Web / HDF5 Viewer** | 图形界面点着看（树 + 表格 + 曲线/热图/RGB） | 右键文件 → **Open With…** 选插件（或关联 `*.hdf5/*.h5` 后双击）；见下方"VS Code 内查看"推荐 |
 | 命令行 `h5ls` / `h5dump` / `h5stat` | 快速列结构 / 导数据 / 存储统计 | `sudo apt install hdf5-tools` |
 | 桌面 GUI（HDFView / ViTables） | 完整 GUI（切片、绘图） | `sudo apt install hdfview vitables` |
 | 仿真里回放（`teleop replay`） | 端到端验证"动作能不能复现" | 见第二篇 §5 |
-| `hdf5_to_mp4.py` | 相机数据导出视频 | 依赖 OpenCV，用 Isaac Sim 自带 Python 跑 |
+| `hdf5_to_mp4.py` | 相机数据导出视频 | 依赖 OpenCV：用 `.venv/bin/python` 直跑（venv 已装 `opencv-python-headless`；勿用 `-p`/python.sh，会静默不产出） |
+
+> **VS Code 内查看（实测推荐）**⭐：本仓库作者的 VS Code 已装两款 HDF5 插件，都顺手好用：
+>
+> 1. **H5Web**（`h5web.vscode-h5web`）——功能最全：左侧树状结构 + 表格 + 曲线/热图/**RGB 图像预览**，特别适合逐条检查 `obs/*`（关节曲线）与相机数据（直接看图）。用法：资源管理器里**右键 `*.hdf5` → Open With… → H5Web**；
+> 2. **HDF5 Viewer**（`lochbrunner.vscode-hdf5-viewer`）——轻量快速：在插件设置里把 `*.hdf5` / `*.h5` 关联给它后，**双击即开**，看结构和中小规模数据非常快。
+>
+> 两者都可以和 `h5py` 互补：先用插件肉眼浏览，确定目标后写脚本批量处理。
 
 用 `h5py` 快速浏览（层级、属性、形状）：
 

@@ -294,7 +294,7 @@ states[t] == obs[t+1](逐值相等,已抽查多对象多个 t)
 | VS Code 插件 **H5Web** 等 | 图形界面点着看(树 + 表格 + 曲线/热图/RGB) | ✅ 已装(2026-10-12),`*.hdf5` 默认打开方式 |
 | HDFView / ViTables 桌面 GUI | 完整 GUI(切片、绘图、编辑) | ❌ 未装 → `sudo apt install hdfview vitables` |
 | Isaac Sim 回放(`teleop replay`) | 在仿真里"看动作能不能复现" | ✅ 见 §4.7 |
-| `hdf5_to_mp4.py` | 相机数据 → 视频 | ⚠️ venv 无 `cv2`;用 `~/isaacsim/python.sh` 跑(见 §4.8) |
+| `hdf5_to_mp4.py` | 相机数据 → 视频 | 用 `.venv/bin/python` 直跑(venv 已装 `opencv-python-headless`);⚠️ 勿用 `-p`/`python.sh`(其 cv2 无编码器,静默不产出,见 §4.8) |
 
 > 命令行与 GUI 的 apt 安装需要 sudo 权限,请由你在终端执行。
 
@@ -413,13 +413,14 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate
 若数据集含相机(`wrist_cam`、`table_cam` 等图像键),用上游工具导出视频:
 
 ```bash
-~/isaacsim/python.sh scripts/tools/hdf5_to_mp4.py \
+.venv/bin/python scripts/tools/hdf5_to_mp4.py \
     --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_with_cam.hdf5 \
     --output_dir ~/code/isaac/IsaacDataCollection/datasets/videos \
     --input_keys wrist_cam table_cam --framerate 30
 ```
 
-- 该脚本依赖 `cv2`(OpenCV):**isaaclab venv 未安装**,而 **Isaac Sim 自带 Python 可用**(实测 `cv2 4.14.0` + `h5py 3.16.0`),因此上面用 `~/isaacsim/python.sh` 运行;
+- 该脚本依赖 `cv2`(OpenCV):venv 已装 `opencv-python-headless`(2026-10-14;含 FFMPEG 编码器),用 `.venv/bin/python` 直跑即可;
+- ⚠️ **不要用 `./isaaclab.sh -p` 或 `~/isaacsim/python.sh`**:二者命中的是 Isaac Sim 自带 cv2(4.14.0),缺视频编码器——`cv2.VideoWriter` 静默失败(`isOpened()==False`,脚本不检查返回值:无报错、无产出、退出码仍为 0;2026-10-14 实测踩坑后修正)。
 - 反向工具 `mp4_to_hdf5.py`(把视觉增广后的 MP4 回填为数据集,参数 `--input_file/--videos_dir/--output_file`);
 - 本任务(`IK-Rel`,state 模式)**无相机**,`obs` 里没有图像,直接跳过本节。
 

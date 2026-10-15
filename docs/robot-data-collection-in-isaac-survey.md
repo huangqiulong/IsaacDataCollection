@@ -270,7 +270,7 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/I
   --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5
 
 # ② 把腕部相机画面导出成 MP4（默认键位列表已含 wrist_cam）
-./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
+.venv/bin/python scripts/tools/hdf5_to_mp4.py \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_umi_like.hdf5 \
   --output_dir ~/code/isaac/IsaacDataCollection/datasets/umi_videos \
   --input_keys wrist_cam
@@ -323,9 +323,11 @@ cd ~/code/isaac/isaaclab && source .venv/bin/activate && mkdir -p ~/code/isaac/I
 wget -c -P ./datasets \
   "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Mimic/pick_place_datasets/dataset_annotated_g1_locomanip.hdf5"
 
-# ② 小规模生成操作数据集（20 条；8GB 显存用小并发）
-./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
-  --device cpu --num_envs 8 --generation_num_trials 20 \
+# ② 小规模生成操作数据集（20 条；8GB 显存用 4 并发——实测 CUDA 8 并发会 OOM）
+#    若报 pinocchio_pywrap_default / undefined symbol 错：终端继承了 ROS 环境——开新的 isaaclab 终端，
+#    或见 ego-in-isaac-workflow.md §2.2 注手工清理 PYTHONPATH / LD_LIBRARY_PATH
+HDF5_USE_FILE_LOCKING=FALSE ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
+  --device cuda --num_envs 4 --generation_num_trials 20 \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \
   --output_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanip.hdf5
 
@@ -341,12 +343,12 @@ wget -c -P ./datasets \
 #   想高分辨率（320x512）在命令里再加 --high_res_video
 
 # ④ 导出第一人称视频
-./isaaclab.sh -p scripts/tools/hdf5_to_mp4.py \
+.venv/bin/python scripts/tools/hdf5_to_mp4.py \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/generated_dataset_g1_locomanipulation_sdg.hdf5 \
   --output_dir ~/code/isaac/IsaacDataCollection/datasets/ego_videos \
   --input_keys robot_pov_cam --video_width 512 --video_height 320
 
-# ⑤ 观看 ~/code/isaac/IsaacDataCollection/datasets/ego_videos/robot_pov_cam_demo_0.mp4 —— 这就是"机器人版 ego 数据"
+# ⑤ 观看 ~/code/isaac/IsaacDataCollection/datasets/ego_videos/demo_0_robot_pov_cam.mp4 —— 这就是“机器人版 ego 数据”
 ```
 
 ### 5.5 与真机的差异 / 注意

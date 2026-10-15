@@ -6,6 +6,7 @@
 > 命令均来自源码核对（标 ⚠️ 处为高成本提示）。
 >
 > **配套文档**：
+>
 > - 种子数据的获取（遥操作录制）：[teleoperation-hands-on-franka-stack-cube.md](./teleoperation-hands-on-franka-stack-cube.md)
 > - 视觉数据版（UMI）：[umi-in-isaac-workflow.md](./umi-in-isaac-workflow.md)
 > - 移动操作版（EGO）：[ego-in-isaac-workflow.md](./ego-in-isaac-workflow.md)
@@ -35,11 +36,11 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 
 ### 1.1 三种生成范式
 
-| 范式 | 机制 | 典型任务 | 特点 |
-| --- | --- | --- | --- |
-| **示范扩充（Mimic）**⭐ | 人类演示 → 子任务分解 → 物体位姿随机重采样 + 运动规划拼接 | `Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0` | 数据"像人"、成功率高、最适合操作技能 |
-| 技能生成（SkillGen） | 用技能片段库 + 规划器直接合成轨迹（无需重规划人类段）| `IsaacContrib-Stack-Cube-Franka-IK-Rel-Skillgen` | 扩展性更强，需 `--use_skillgen` |
-| 域随机化（DR） | 材质/光照/位姿/物理参数随机 | 所有任务（含上述管线的生成阶段）| 决定 sim2real 泛化的多样性 |
+| 范式                          | 机制                                                        | 典型任务                                           | 特点                                 |
+| ----------------------------- | ----------------------------------------------------------- | -------------------------------------------------- | ------------------------------------ |
+| **示范扩充（Mimic）**⭐ | 人类演示 → 子任务分解 → 物体位姿随机重采样 + 运动规划拼接 | `Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0`        | 数据"像人"、成功率高、最适合操作技能 |
+| 技能生成（SkillGen）          | 用技能片段库 + 规划器直接合成轨迹（无需重规划人类段）       | `IsaacContrib-Stack-Cube-Franka-IK-Rel-Skillgen` | 扩展性更强，需 `--use_skillgen`    |
+| 域随机化（DR）                | 材质/光照/位姿/物理参数随机                                 | 所有任务（含上述管线的生成阶段）                   | 决定 sim2real 泛化的多样性           |
 
 ### 1.2 为什么仿真数据能"规模化"
 
@@ -49,11 +50,11 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 
 ### 1.3 三类任务的 Mimic 任务名对照
 
-| 数据类型 | Mimic 任务 ID |
-| --- | --- |
-| state（低维观测）| `Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0` |
-| visuomotor（图像观测）| `Isaac-Stack-Cube-Franka-IK-Rel-Visuomotor-Mimic-v0` |
-| skillgen 变体 | `IsaacContrib-Stack-Cube-Franka-IK-Rel-Skillgen` |
+| 数据类型               | Mimic 任务 ID                                          |
+| ---------------------- | ------------------------------------------------------ |
+| state（低维观测）      | `Isaac-Stack-Cube-Franka-IK-Rel-Mimic-v0`            |
+| visuomotor（图像观测） | `Isaac-Stack-Cube-Franka-IK-Rel-Visuomotor-Mimic-v0` |
+| skillgen 变体          | `IsaacContrib-Stack-Cube-Franka-IK-Rel-Skillgen`     |
 
 ---
 
@@ -61,13 +62,13 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 
 ### 2.1 管线总览与前置条件
 
-| 步骤 | 工具 | 产物 | 本机耗时参考 |
-| --- | --- | --- | --- |
-| ① 录种子 | `teleop record`（见遥操作手册）| `dataset_keyboard.hdf5`（≥3 条）| 已实测 ✅ |
-| ② 标注 | `annotate_demos.py` | `annotated_kbd.hdf5` | ~2-5 分钟 |
-| ③ 生成 | `generate_dataset.py` | `generated_kbd_*.hdf5` | 10 条约 5-10 分钟 |
-| ④ 训练 | `robomimic/train.py` | checkpoint（`logs/robomimic/...`）| ~10-30 分钟 |
-| ⑤ 评估 | `robomimic/play.py` | 成功率数字 | ~5-10 分钟 |
+| 步骤      | 工具                              | 产物                                 | 本机耗时参考      |
+| --------- | --------------------------------- | ------------------------------------ | ----------------- |
+| ① 录种子 | `teleop record`（见遥操作手册） | `dataset_keyboard.hdf5`（≥3 条）  | 已实测 ✅         |
+| ② 标注   | `annotate_demos.py`             | `annotated_kbd.hdf5`               | ~2-5 分钟         |
+| ③ 生成   | `generate_dataset.py`           | `generated_kbd_*.hdf5`             | 10 条约 5-10 分钟 |
+| ④ 训练   | `robomimic/train.py`            | checkpoint（`logs/robomimic/...`） | ~10-30 分钟       |
+| ⑤ 评估   | `robomimic/play.py`             | 成功率数字                           | ~5-10 分钟        |
 
 **前置条件**：种子演示必须与标准流程一致（Stack-Cube 为 蓝→红→绿 的顺序）——
 `--auto` 标注依赖子任务完成信号（`subtask_terms`），流程乱了标注就会错（详见遥操作手册 §4.3）。
@@ -104,13 +105,13 @@ dataset_keyboard.hdf5  →  annotated_kbd.hdf5  →  generated_kbd_100.hdf5 (+�
 
 关键参数（源码核对）：
 
-| 参数 | 含义 | 建议 |
-| --- | --- | --- |
-| `--num_envs` | 并行环境数 | 8GB：16 → 32 → 64 逐级试 |
-| `--generation_num_trials` | 尝试生成多少条 | 目标是"成功导出条数"，失败会自动丢弃 |
-| `--use_skillgen` | 换 SkillGen 生成 | 配 Skillgen 任务使用（进阶）|
-| `--disable_dataset_compression` | 关闭压缩 | 一般不需要；调试数据时可用 |
-| `--pause_subtask` | 子任务间暂停 | GUI 下肉眼跟流程用 |
+| 参数                              | 含义             | 建议                                 |
+| --------------------------------- | ---------------- | ------------------------------------ |
+| `--num_envs`                    | 并行环境数       | 8GB：16 → 32 → 64 逐级试           |
+| `--generation_num_trials`       | 尝试生成多少条   | 目标是"成功导出条数"，失败会自动丢弃 |
+| `--use_skillgen`                | 换 SkillGen 生成 | 配 Skillgen 任务使用（进阶）         |
+| `--disable_dataset_compression` | 关闭压缩         | 一般不需要；调试数据时可用           |
+| `--pause_subtask`               | 子任务间暂停     | GUI 下肉眼跟流程用                   |
 
 - **生成成功率**（终端统计）：state 模式官方参考 ~40%；<20% 说明种子结构/标注有问题；
 - 生成阶段自动做物体位姿随机化——天然带域随机化属性。
@@ -199,21 +200,21 @@ python scripts/tools/merge_hdf5_datasets.py \
 
 ### 4.3 规模化决策表
 
-| 观察 | 判断 | 行动 |
-| --- | --- | --- |
-| 生成成功率 ≥30% 且 BC 成功率 >50% | 链路健康 | 放大：补种子到 20-30 条 → 生成 1000 条 → 完整训练 |
-| 生成成功率 <20% | 种子/标注问题 | 统一种子流程重录；检查标注边界 |
-| BC 成功率 <20% | 数据不足/单一 | 增加生成条数、增加种子多样性 |
-| 训练集表现好、鲁棒评估差 | 多样性不足 | 生成时加大随机化；用 robust_eval 定位薄弱设置 |
+| 观察                               | 判断          | 行动                                                |
+| ---------------------------------- | ------------- | --------------------------------------------------- |
+| 生成成功率 ≥30% 且 BC 成功率 >50% | 链路健康      | 放大：补种子到 20-30 条 → 生成 1000 条 → 完整训练 |
+| 生成成功率 <20%                    | 种子/标注问题 | 统一种子流程重录；检查标注边界                      |
+| BC 成功率 <20%                     | 数据不足/单一 | 增加生成条数、增加种子多样性                        |
+| 训练集表现好、鲁棒评估差           | 多样性不足    | 生成时加大随机化；用 robust_eval 定位薄弱设置       |
 
 ### 4.4 8GB 显存的规模参考
 
-| 阶段 | 推荐规模 | 备注 |
-| --- | --- | --- |
-| 生成 | `--num_envs 32`，每批 ≤100 条 | 分批跑多次；显存峰值可控 |
-| 训练（state）| 100~500 条数据，50~100 epoch | 模型小，显存充足 |
-| 训练（visuomotor）| 见 UMI 文档 §4.1（batch 16 → 必要时调小）| 图像吃显存 |
-| 评估 | `--num_rollouts 20`（GUI）/ 50+（无头统计）| 评估与训练不要同时跑 |
+| 阶段               | 推荐规模                                      | 备注                     |
+| ------------------ | --------------------------------------------- | ------------------------ |
+| 生成               | `--num_envs 32`，每批 ≤100 条              | 分批跑多次；显存峰值可控 |
+| 训练（state）      | 100~500 条数据，50~100 epoch                  | 模型小，显存充足         |
+| 训练（visuomotor） | 见 UMI 文档 §4.1（batch 16 → 必要时调小）   | 图像吃显存               |
+| 评估               | `--num_rollouts 20`（GUI）/ 50+（无头统计） | 评估与训练不要同时跑     |
 
 ---
 
@@ -266,12 +267,12 @@ python scripts/tools/merge_hdf5_datasets.py --input_files <a.hdf5> <b.hdf5> --ou
 
 ### 6.2 FAQ
 
-| 现象 | 原因 / 解决 |
-| --- | --- |
-| 标注失败/边界错乱 | 种子演示不符合标准子任务流程——统一种子重录 |
-| 生成成功率为 0 | 任务/标注不匹配（task 名与数据集 env 不符）；种子过少（<2 条时先补）|
-| 生成 OOM | 降 `--num_envs`（32→16→8）|
-| 生成中途想停 | Ctrl+C；已成功条目可能未 flush——重跑时换输出文件名 |
-| 训练 loss 不降 | 数据量太少/动作不连续；检查质检步骤 + 增加生成条数 |
-| 回放成功率波动大 | 多试几个 checkpoint（不同 epoch）；20 次 rollout 统计噪声较大 |
-| 数据集被覆盖 | 生成/训练脚本不会覆盖输入；录制种子时注意文件名（见遥操作手册）|
+| 现象              | 原因 / 解决                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| 标注失败/边界错乱 | 种子演示不符合标准子任务流程——统一种子重录                         |
+| 生成成功率为 0    | 任务/标注不匹配（task 名与数据集 env 不符）；种子过少（<2 条时先补） |
+| 生成 OOM          | 降 `--num_envs`（32→16→8）                                       |
+| 生成中途想停      | Ctrl+C；已成功条目可能未 flush——重跑时换输出文件名                 |
+| 训练 loss 不降    | 数据量太少/动作不连续；检查质检步骤 + 增加生成条数                   |
+| 回放成功率波动大  | 多试几个 checkpoint（不同 epoch）；20 次 rollout 统计噪声较大        |
+| 数据集被覆盖      | 生成/训练脚本不会覆盖输入；录制种子时注意文件名（见遥操作手册）      |

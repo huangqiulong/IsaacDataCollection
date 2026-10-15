@@ -119,7 +119,7 @@ export UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
 （若此命令报 "no matching entry exists in env_cfg.teleop_devices"——见 §3.2 用启动器 + 变体任务。）
 
-**按键映射**（源码级导出，可用 `ops/scripts/isaac_gamepad_mapping_dump.py` 复核）：
+**按键映射**（源码级导出，可用 `IsaacDataCollection/scripts/isaac_gamepad_mapping_dump.py` 复核）：
 
 | 操作                     | 手柄输入       | 末端增量（默认配置）                         |
 | ------------------------ | -------------- | -------------------------------------------- |
@@ -145,8 +145,8 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
 
 > ✅ **2026-10-12 已修复蓝牙 Xbox 手柄无法识别的问题**（本机实测）：此前蓝牙手柄（"Xbox Wireless Controller"）
 > 在 Kit 里显示 `Device name: None`——根因是内嵌 GLFW 映射表缺该固件版的 GUID；现已用
-> `ops/scripts/glfw_gamepad_mapping_patch.py` 修补（含备份，可 revert）。
-> **注意：Isaac Sim 升级/重装会覆盖该修复，需重新 `python3 ops/scripts/glfw_gamepad_mapping_patch.py apply`。**
+> `IsaacDataCollection/scripts/glfw_gamepad_mapping_patch.py` 修补（含备份，可 revert）。
+> **注意：Isaac Sim 升级/重装会覆盖该修复，需重新 `python3 IsaacDataCollection/scripts/glfw_gamepad_mapping_patch.py apply`。**
 > （Xbox 360 手柄不支持蓝牙，需 USB 有线或专用 2.4G 接收器；蓝牙款实为 Xbox One 世代手柄。）
 
 ### 2.3 鼠标
@@ -220,7 +220,7 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
 
 工作区的启动器脚本解决了这个问题：它在启动任何仿真之前，先注册**任务变体**
 `IsaacContrib-Stack-Cube-Franka-IK-Rel-Teleop`（在官方任务配置上加 `gamepad` 和 `mouse` 两个设备条目），
-然后把参数透传给官方脚本运行。变体里的手柄灵敏度设为 0.05/0.05（与键盘一致）。
+然后把参数透传给官方脚本运行。变体里的手柄灵敏度为 0.10/0.10（2026-10-14 按需求从 0.05 加倍；键盘保持 0.05）。
 
 **录制**（手柄 Y 键 = 重开当前演示；X 键 = 夹爪）：
 
@@ -240,7 +240,8 @@ Linux 检查：插上 USB（或蓝牙配对）后 `ls /dev/input/js*` 应出现�
 ```
 
 > 手感调节：如太快/太慢，编辑 `isaaclab_teleop_extras.py` 里
-> `Se3GamepadWithResetCfg(pos_sensitivity=0.05, rot_sensitivity=0.05, ...)` 的数值后重跑。
+> `Se3GamepadWithResetCfg(pos_sensitivity=0.10, rot_sensitivity=0.10, ...)` 的数值后重跑
+> （0.10 为 2026-10-14 加倍后的当前值）。
 
 ### 3.3 鼠标
 
@@ -507,7 +508,7 @@ L3 训练可用性（终极判据）:
 | -------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Downloaded Isaac Sim packages cannot be combined with a Python virtual environment` | venv 未基于 Isaac Sim 自带 Python（当前环境为空壳时也会出现） | 按 §0.1 重建                                                                                                                                                                          |
 | `--teleop_device=gamepad ... Built-in devices: keyboard, spacemouse`                 | 用了官方 record（内置不含 gamepad）                           | 用 §3.2 启动器 +`-Teleop` 任务                                                                                                                                                      |
-| 手柄无反应                                                                             | 窗口无焦点 / 设备未识别                                       | 点击 Isaac 窗口；`ls /dev/input/js*`；显示 `Device name: None` 时跑 `python3 ops/scripts/glfw_gamepad_mapping_patch.py check`（2026-10-12 蓝牙手柄已修复；Sim 升级后需重 patch） |
+| 手柄无反应                                                                             | 窗口无焦点 / 设备未识别                                       | 点击 Isaac 窗口；`ls /dev/input/js*`；显示 `Device name: None` 时跑 `python3 IsaacDataCollection/scripts/glfw_gamepad_mapping_patch.py check`（2026-10-12 蓝牙手柄已修复；Sim 升级后需重 patch） |
 | 鼠标方式 B 无反应                                                                      | 需按住键拖动 / 未实测警告                                     | 按住左键再拖；确认焦点；必要时调 extras 脚本                                                                                                                                           |
 | 键盘按了没反应                                                                         | 焦点在终端                                                    | 点击仿真窗口再操作                                                                                                                                                                     |
 | 录制退出后少于`--num_demos` 条                                                       | 只导出成功演示；或中途 Ctrl+C                                 | 正常行为；继续录或降低难度                                                                                                                                                             |

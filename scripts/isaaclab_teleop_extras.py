@@ -39,11 +39,13 @@
         --teleop_device gamepad --visualizer kit \\
         --num_demos 10 --dataset_file ~/code/isaac/IsaacDataCollection/datasets/dataset_gamepad.hdf5
 
-状态说明(2026-10-12 更新):
+状态说明(2026-10-14 更新):
   - Se3GamepadWithReset / Se3KeyboardYawBoost / 任务变体: 基于官方类包装, 风险低;
   - 手柄实测(2026-10-12): 蓝牙手柄已可识别(GLFW 映射修补后); 已按反馈默认翻转
     "pan_y"(左摇杆左右); 其它轴若也需翻转: ISAACLAB_GAMEPAD_INVERT="pan_y,roll" 等;
     yaw(绕 Z 轴)已按需求加速 ×3(ISAACLAB_GAMEPAD_YAW_BOOST 可调);
+  - 灵敏度(2026-10-14): 手柄移动/旋转灵敏度整体 ×2(pos/rot 0.05 → 0.10, 见
+    _add_teleop_devices; yaw 叠加 ×3 后为 0.30); 键盘/鼠标灵敏度不变;
   - Se3Mouse: 尚未上机实测。若鼠标拖动无反应, 优先检查 Isaac 窗口是否获得焦点;
     若方向不对, 调整下方符号。
 """
@@ -355,7 +357,7 @@ class Se3KeyboardYawBoost(Se3Keyboard):
     旋转键相同; 实操中绕 Z 轴的转动往往偏慢。本类把 C/V 的绑定值乘
     ``cfg.yaw_boost``(默认 3.0), 其余按键(平移/roll/pitch/夹爪)不变。
 
-    数值自检脚本: ops/scripts/isaac_keyboard_yaw_probe.py
+    数值自检脚本: IsaacDataCollection/scripts/isaac_keyboard_yaw_probe.py
     """
 
     def __init__(self, cfg: Se3KeyboardYawBoostCfg):
@@ -409,8 +411,10 @@ def _add_teleop_devices(env_cfg) -> None:
     # 手柄轴方向翻转(2026-10-12 用户实测反馈: 左右反向 → 默认翻转 pan_y)
     _gp_invert = os.environ.get("ISAACLAB_GAMEPAD_INVERT", "pan_y")
     devices["gamepad"] = Se3GamepadWithResetCfg(
-        pos_sensitivity=0.05,
-        rot_sensitivity=0.05,
+        # 移动/旋转灵敏度(2026-10-14 用户需求: 整体 ×2, 0.05 → 0.10; 覆盖平移三轴 +
+        # yaw/roll/pitch; yaw 再叠加下方 ×3 增益, 详见模块状态说明)
+        pos_sensitivity=0.10,
+        rot_sensitivity=0.10,
         invert_axes=tuple(a.strip() for a in _gp_invert.split(",") if a.strip()),
         # 绕 Z 轴旋转(右摇杆左右)加速(2026-10-12 用户需求: ×3)
         yaw_boost=float(os.environ.get("ISAACLAB_GAMEPAD_YAW_BOOST", "3.0")),
