@@ -4,7 +4,6 @@
 被以下脚本共享：
   - egosuite_mcap_inspect.py   数据结构检查
   - egosuite_mcap_extract.py   数据抽取（视频 / 姿态 / 元数据）
-  - egosuite_demo_figures.py   可视化与"伪动作"构建
 
 提供：MCAP 内嵌 Protobuf 动态解码、四元数与投影几何、
 手部骨架定义、视频抽帧、matplotlib 中文字体配置。

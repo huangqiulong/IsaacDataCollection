@@ -1,0 +1,683 @@
+{
+  "task": "IsaacContrib-Stack-Cube-Franka-IK-Rel-Visuomotor",
+  "resets_per_setting": 3,
+  "env_origin": [
+    -0.0,
+    0.0,
+    0.0
+  ],
+  "captures": [
+    {
+      "setting": "vanilla",
+      "reset": 0,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5797,
+          -0.0704,
+          0.0203
+        ],
+        "cube_2": [
+          0.5076,
+          0.0742,
+          0.0203
+        ],
+        "cube_3": [
+          0.4107,
+          0.0035,
+          0.0203
+        ]
+      },
+      "table_cam_file": "vanilla_00_table_cam.png",
+      "wrist_cam_file": "vanilla_00_wrist_cam.png"
+    },
+    {
+      "setting": "vanilla",
+      "reset": 1,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.4876,
+          0.0177,
+          0.0203
+        ],
+        "cube_2": [
+          0.5875,
+          0.0431,
+          0.0203
+        ],
+        "cube_3": [
+          0.5622,
+          -0.0548,
+          0.0203
+        ]
+      },
+      "table_cam_file": "vanilla_01_table_cam.png",
+      "wrist_cam_file": "vanilla_01_wrist_cam.png"
+    },
+    {
+      "setting": "vanilla",
+      "reset": 2,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5335,
+          0.038,
+          0.0203
+        ],
+        "cube_2": [
+          0.4301,
+          -0.0711,
+          0.0203
+        ],
+        "cube_3": [
+          0.5983,
+          -0.0626,
+          0.0203
+        ]
+      },
+      "table_cam_file": "vanilla_02_table_cam.png",
+      "wrist_cam_file": "vanilla_02_wrist_cam.png"
+    },
+    {
+      "setting": "light_intensity",
+      "reset": 0,
+      "light": {
+        "intensity": 2042.4,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.4676,
+          -0.0406,
+          0.0203
+        ],
+        "cube_2": [
+          0.5464,
+          0.0929,
+          0.0203
+        ],
+        "cube_3": [
+          0.4255,
+          0.0528,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_intensity_00_table_cam.png",
+      "wrist_cam_file": "light_intensity_00_wrist_cam.png"
+    },
+    {
+      "setting": "light_intensity",
+      "reset": 1,
+      "light": {
+        "intensity": 9039.9,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.4731,
+          0.0743,
+          0.0203
+        ],
+        "cube_2": [
+          0.5339,
+          -0.0205,
+          0.0203
+        ],
+        "cube_3": [
+          0.4237,
+          -0.0456,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_intensity_01_table_cam.png",
+      "wrist_cam_file": "light_intensity_01_wrist_cam.png"
+    },
+    {
+      "setting": "light_intensity",
+      "reset": 2,
+      "light": {
+        "intensity": 2233.7,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.434,
+          -0.0795,
+          0.0203
+        ],
+        "cube_2": [
+          0.4628,
+          0.0575,
+          0.0203
+        ],
+        "cube_3": [
+          0.5594,
+          -0.0322,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_intensity_02_table_cam.png",
+      "wrist_cam_file": "light_intensity_02_wrist_cam.png"
+    },
+    {
+      "setting": "light_color",
+      "reset": 0,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.799,
+          0.588,
+          0.862
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5454,
+          -0.0122,
+          0.0203
+        ],
+        "cube_2": [
+          0.4642,
+          -0.0766,
+          0.0203
+        ],
+        "cube_3": [
+          0.4609,
+          0.0536,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_color_00_table_cam.png",
+      "wrist_cam_file": "light_color_00_wrist_cam.png"
+    },
+    {
+      "setting": "light_color",
+      "reset": 1,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.79,
+          0.855,
+          0.605
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5144,
+          0.013,
+          0.0203
+        ],
+        "cube_2": [
+          0.4193,
+          -0.0201,
+          0.0203
+        ],
+        "cube_3": [
+          0.5874,
+          -0.0794,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_color_01_table_cam.png",
+      "wrist_cam_file": "light_color_01_wrist_cam.png"
+    },
+    {
+      "setting": "light_color",
+      "reset": 2,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.764,
+          0.67,
+          0.816
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5743,
+          0.0014,
+          0.0203
+        ],
+        "cube_2": [
+          0.4261,
+          0.0828,
+          0.0203
+        ],
+        "cube_3": [
+          0.4475,
+          -0.0616,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_color_02_table_cam.png",
+      "wrist_cam_file": "light_color_02_wrist_cam.png"
+    },
+    {
+      "setting": "light_texture",
+      "reset": 0,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": "floral_tent_2k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.5428,
+          0.0794,
+          0.0203
+        ],
+        "cube_2": [
+          0.4505,
+          -0.0611,
+          0.0203
+        ],
+        "cube_3": [
+          0.4328,
+          0.0774,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_texture_00_table_cam.png",
+      "wrist_cam_file": "light_texture_00_wrist_cam.png"
+    },
+    {
+      "setting": "light_texture",
+      "reset": 1,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": "abandoned_parking_4k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.5045,
+          0.0203,
+          0.0203
+        ],
+        "cube_2": [
+          0.5746,
+          -0.0893,
+          0.0203
+        ],
+        "cube_3": [
+          0.4003,
+          -0.0958,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_texture_01_table_cam.png",
+      "wrist_cam_file": "light_texture_01_wrist_cam.png"
+    },
+    {
+      "setting": "light_texture",
+      "reset": 2,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": "machine_shop_01_2k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.5258,
+          -0.0352,
+          0.0203
+        ],
+        "cube_2": [
+          0.4307,
+          -0.0887,
+          0.0203
+        ],
+        "cube_3": [
+          0.5063,
+          0.0914,
+          0.0203
+        ]
+      },
+      "table_cam_file": "light_texture_02_table_cam.png",
+      "wrist_cam_file": "light_texture_02_wrist_cam.png"
+    },
+    {
+      "setting": "table_texture",
+      "reset": 0,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.4515,
+          -0.0362,
+          0.0203
+        ],
+        "cube_2": [
+          0.588,
+          0.0734,
+          0.0203
+        ],
+        "cube_3": [
+          0.4178,
+          0.0809,
+          0.0203
+        ]
+      },
+      "table_cam_file": "table_texture_00_table_cam.png",
+      "wrist_cam_file": "table_texture_00_wrist_cam.png"
+    },
+    {
+      "setting": "table_texture",
+      "reset": 1,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.4944,
+          -0.0854,
+          0.0203
+        ],
+        "cube_2": [
+          0.5547,
+          0.0043,
+          0.0203
+        ],
+        "cube_3": [
+          0.4208,
+          -0.0133,
+          0.0203
+        ]
+      },
+      "table_cam_file": "table_texture_01_table_cam.png",
+      "wrist_cam_file": "table_texture_01_wrist_cam.png"
+    },
+    {
+      "setting": "table_texture",
+      "reset": 2,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5804,
+          0.099,
+          0.0203
+        ],
+        "cube_2": [
+          0.4719,
+          0.0749,
+          0.0203
+        ],
+        "cube_3": [
+          0.5989,
+          -0.0829,
+          0.0203
+        ]
+      },
+      "table_cam_file": "table_texture_02_table_cam.png",
+      "wrist_cam_file": "table_texture_02_wrist_cam.png"
+    },
+    {
+      "setting": "robot_texture",
+      "reset": 0,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5856,
+          0.0397,
+          0.0203
+        ],
+        "cube_2": [
+          0.5669,
+          -0.0839,
+          0.0203
+        ],
+        "cube_3": [
+          0.4315,
+          0.0053,
+          0.0203
+        ]
+      },
+      "table_cam_file": "robot_texture_00_table_cam.png",
+      "wrist_cam_file": "robot_texture_00_wrist_cam.png"
+    },
+    {
+      "setting": "robot_texture",
+      "reset": 1,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.5697,
+          -0.0965,
+          0.0203
+        ],
+        "cube_2": [
+          0.5419,
+          0.0084,
+          0.0203
+        ],
+        "cube_3": [
+          0.422,
+          -0.0224,
+          0.0203
+        ]
+      },
+      "table_cam_file": "robot_texture_01_table_cam.png",
+      "wrist_cam_file": "robot_texture_01_wrist_cam.png"
+    },
+    {
+      "setting": "robot_texture",
+      "reset": 2,
+      "light": {
+        "intensity": 3000.0,
+        "color": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "texture": null
+      },
+      "cubes": {
+        "cube_1": [
+          0.481,
+          0.0095,
+          0.0203
+        ],
+        "cube_2": [
+          0.5942,
+          -0.0234,
+          0.0203
+        ],
+        "cube_3": [
+          0.4676,
+          -0.0896,
+          0.0203
+        ]
+      },
+      "table_cam_file": "robot_texture_02_table_cam.png",
+      "wrist_cam_file": "robot_texture_02_wrist_cam.png"
+    },
+    {
+      "setting": "all",
+      "reset": 0,
+      "light": {
+        "intensity": 2600.1,
+        "color": [
+          0.98,
+          0.634,
+          0.636
+        ],
+        "texture": "sunflowers_4k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.4605,
+          -0.0847,
+          0.0203
+        ],
+        "cube_2": [
+          0.4519,
+          0.0286,
+          0.0203
+        ],
+        "cube_3": [
+          0.5691,
+          0.0518,
+          0.0203
+        ]
+      },
+      "table_cam_file": "all_00_table_cam.png",
+      "wrist_cam_file": "all_00_wrist_cam.png"
+    },
+    {
+      "setting": "all",
+      "reset": 1,
+      "light": {
+        "intensity": 5556.0,
+        "color": [
+          0.649,
+          0.465,
+          1.0
+        ],
+        "texture": "machine_shop_01_2k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.5602,
+          0.0075,
+          0.0203
+        ],
+        "cube_2": [
+          0.5188,
+          -0.0939,
+          0.0203
+        ],
+        "cube_3": [
+          0.4802,
+          0.0732,
+          0.0203
+        ]
+      },
+      "table_cam_file": "all_01_table_cam.png",
+      "wrist_cam_file": "all_01_wrist_cam.png"
+    },
+    {
+      "setting": "all",
+      "reset": 2,
+      "light": {
+        "intensity": 3925.5,
+        "color": [
+          0.554,
+          1.0,
+          0.684
+        ],
+        "texture": "machine_shop_01_2k.hdr@"
+      },
+      "cubes": {
+        "cube_1": [
+          0.5337,
+          0.0154,
+          0.0203
+        ],
+        "cube_2": [
+          0.4804,
+          -0.0768,
+          0.0203
+        ],
+        "cube_3": [
+          0.4637,
+          0.0879,
+          0.0203
+        ]
+      },
+      "table_cam_file": "all_02_table_cam.png",
+      "wrist_cam_file": "all_02_wrist_cam.png"
+    }
+  ]
+}

@@ -226,7 +226,7 @@ wget -c -P ./datasets \
 
 # ② 小规模生成操作数据（20 条；8GB 显存用 4 并发——实测 CUDA 8 并发会 OOM）
 #    若报 pinocchio_pywrap_default / undefined symbol 错：终端继承了 ROS 环境——开新的 isaaclab 终端，
-#    或见 ego-in-isaac-workflow.md §2.2 注手工清理 PYTHONPATH / LD_LIBRARY_PATH
+#    或手工清理 PYTHONPATH / LD_LIBRARY_PATH（剔除 ROS 相关条目）
 HDF5_USE_FILE_LOCKING=FALSE ./isaaclab.sh -p scripts/imitation_learning/isaaclab_mimic/generate_dataset.py \
   --device cuda --num_envs 4 --generation_num_trials 20 \
   --input_file ~/code/isaac/IsaacDataCollection/datasets/dataset_annotated_g1_locomanip.hdf5 \

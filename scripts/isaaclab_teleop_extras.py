@@ -356,8 +356,6 @@ class Se3KeyboardYawBoost(Se3Keyboard):
     官方键盘把 C/V 的增量绑定为 ``rot_sensitivity``(如 0.05 rad/次), 与其它
     旋转键相同; 实操中绕 Z 轴的转动往往偏慢。本类把 C/V 的绑定值乘
     ``cfg.yaw_boost``(默认 3.0), 其余按键(平移/roll/pitch/夹爪)不变。
-
-    数值自检脚本: IsaacDataCollection/scripts/isaac_keyboard_yaw_probe.py
     """
 
     def __init__(self, cfg: Se3KeyboardYawBoostCfg):

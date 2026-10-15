@@ -363,4 +363,4 @@ python ~/code/isaac/IsaacDataCollection/scripts/hdf5_plot_demo.py \
 
 ---
 
-*本文全部结论基于实测（Visuomotor 任务 5 条双相机演示，2,599 帧）+ 源码核对；环境为 Isaac Sim 6.1 + Isaac Lab 3.0（RTX 4070 Laptop 8GB）。配图由 `scripts/isaac_sim_05_figures.py` 自动生成，可复现。*
+*本文全部结论基于实测（Visuomotor 任务 5 条双相机演示，2,599 帧）+ 源码核对；环境为 Isaac Sim 6.1 + Isaac Lab 3.0（RTX 4070 Laptop 8GB）。配图存于 `docs/images/isaac-sim-05/`。*

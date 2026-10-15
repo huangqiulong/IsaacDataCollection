@@ -4,7 +4,7 @@
 
 与第五篇最大的不同是：这次**两条腿都落地实测**——先在 Isaac Lab 里用 G1 人形机器人生成第一人称数据（Mimic 种子扩充 + 移动操作 SDG），再从 Hugging Face 上把真实世界的公开 EGO 数据集 **EgoSuite-Open100K**（49 TB 级）下载下来，跑通"MCAP 解析 → 骨架投影验证 → 伪动作构建"的完整处理链路。两边的数据形态、字段和坑，都有一手数字。
 
-> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) 。本篇新增脚本：`scripts/egosuite_download.sh`（Bucket 下载助手）、`egosuite_mcap_inspect.py` / `egosuite_mcap_extract.py` / `egosuite_demo_figures.py`（MCAP 处理链）、`isaac_sim_06_figures.py`（配图）。
+> **配套资源**：本系列的全部文章、配套脚本与图表源码已开源：[github.com/huangqiulong/IsaacDataCollection](https://github.com/huangqiulong/IsaacDataCollection) 。本篇新增脚本：`scripts/egosuite_download.sh`（Bucket 下载助手）、`egosuite_mcap_inspect.py` / `egosuite_mcap_extract.py`（MCAP 处理链）。
 
 ## 0. 一分钟速览
 
@@ -273,4 +273,4 @@ X_cam = R_cw · X_world + t_cw     （R/t 来自 /pose/headcam，R_cw = R^T，t_
 
 ---
 
-*本文全部结论基于实测：仿真侧为 G1 locomanipulation（Mimic 20 条 / SDG 1 集 873 帧）；真机侧为 EgoSuite-Open100K 快照（3 集 / 61 MB）。环境：Isaac Sim 6.1 + Isaac Lab 3.0（RTX 4070 Laptop 8GB）。配图由 `scripts/isaac_sim_06_figures.py` 生成，可复现。*
+*本文全部结论基于实测：仿真侧为 G1 locomanipulation（Mimic 20 条 / SDG 1 集 873 帧）；真机侧为 EgoSuite-Open100K 快照（3 集 / 61 MB）。环境：Isaac Sim 6.1 + Isaac Lab 3.0（RTX 4070 Laptop 8GB）。配图存于 `docs/images/isaac-sim-06/`。*
